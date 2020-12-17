@@ -9,3 +9,7 @@
 [Github Flavored Markdown 문법 참고](https://guides.github.com/features/mastering-markdown/)
 
 ## Starting Points
+
+| Link            | Tags                                 |
+| --------------- | ------------------------------------ |
+| [REST](REST.md) | `web` `api` `architecture` `backend` |
