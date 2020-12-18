@@ -10,6 +10,7 @@
 
 ## Starting Points
 
-| Link            | Tags                                 |
-| --------------- | ------------------------------------ |
-| [REST](REST.md) | `web` `api` `architecture` `backend` |
+| Link                      | Tags                                    |
+| ------------------------- | --------------------------------------- |
+| [REST](REST.md)           | `web` `api` `architecture` `backend`    |
+| [Fetch API](Fetch-API.md) | `web` `web-api` `javascript` `frontend` |
