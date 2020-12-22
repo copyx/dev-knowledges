@@ -28,7 +28,7 @@
 
 #### `yield`
 
-#### `yield\*
+#### `yield\*`
 
 ### `arguments[@@iterator]`
 
