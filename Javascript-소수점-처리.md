@@ -37,3 +37,12 @@ console.log(number.toPrecision(2)); // 1.2e+3
 console.log(number.toPrecision(6)); // 1234.57
 console.log(number.toPrecision(9)); // 1234.56780
 ```
+
+# 참고자료
+
+- [Math.floor() - Javascript | MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/floor)
+- [Math.round() - Javascript | MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/round)
+- [Math.ceil() - Javascript | MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/ceil)
+- [Number.prototype.toFixed() - Javascript | MDN](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Number/toFixed)
+- [Number.prototype.toPrecision() - Javascript | MDN](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Number/toPrecision)
+- [Number.prototype.toExponential() - Javascript | MDN](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Number/toExponential)
