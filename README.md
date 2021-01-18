@@ -21,3 +21,4 @@
 | [Javascript "use strict"](Javascript-use-strict.md)             | `javascript`                            |
 | [서버 개발 환경의 구분과 역할](서버-개발-환경의-구분과-역할.md) | `ops` `backend`                         |
 | [React](React.md)                                               | `javascript` `web` `frontend`           |
+| [Redux](Redux.md)                                               | `javascript` `web` `frontend`           |
