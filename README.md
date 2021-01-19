@@ -23,3 +23,4 @@
 | [React](React.md)                                                 | `javascript` `web` `frontend`           |
 | [Redux](Redux.md)                                                 | `javascript` `web` `frontend`           |
 | [Github Flow를 위한 Git 명령들](Github-Flow를-위한-Git-명령들.md) | `git` `github`                          |
+| [일하면서 유용한 Git 명령들](일하면서-유용한-Git-명령들.md)       | `git`                                   |
