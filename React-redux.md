@@ -1,4 +1,4 @@
-# React-redux
+# [React-redux](https://react-redux.js.org/)
 
 React를 위한 공식적인 Redux UI 바인딩 라이브러리.
 
