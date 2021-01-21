@@ -5,3 +5,9 @@
 ```bash
 git log -S <string>
 ```
+
+## 리모트 브랜치 삭제
+
+```bash
+git push --delete <remote> <branch>
+```
