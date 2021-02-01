@@ -27,3 +27,4 @@
 | [일하면서 유용한 Git 명령들](일하면서-유용한-Git-명령들.md)       | `git`                                   |
 | [SOLID](SOLID.md)                                                 | `oop`                                   |
 | [The Practice of Programming](The-Practice-of-Programming.md)     | `book` `how_to_programming`             |
+| [SQL JOINs](SQL-JOINs.md)                                         | `database` `sql` `backend`              |
