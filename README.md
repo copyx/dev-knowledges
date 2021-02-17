@@ -17,7 +17,6 @@
 | [Javascript 소수점 처리](Javascript-소수점-처리.md)                           | `javascript`                            |
 | [ES6 변경사항](ES6-변경사항.md)                                               | `javascript`                            |
 | [Koa](Koa.md)                                                                 | `javascript` `web` `backend`            |
-| [MySQL](MySQL.md)                                                             | `database` `sql` `backend`              |
 | [Javascript "use strict"](Javascript-use-strict.md)                           | `javascript`                            |
 | [서버 개발 환경의 구분과 역할](서버-개발-환경의-구분과-역할.md)               | `ops` `backend`                         |
 | [React](React.md)                                                             | `javascript` `web` `frontend`           |
@@ -27,5 +26,5 @@
 | [일하면서 유용한 Git 명령들](일하면서-유용한-Git-명령들.md)                   | `git`                                   |
 | [SOLID](SOLID.md)                                                             | `oop`                                   |
 | [The Practice of Programming](The-Practice-of-Programming.md)                 | `book` `how_to_programming`             |
-| [SQL JOINs](SQL-JOINs.md)                                                     | `database` `sql` `backend`              |
+| [Database](Database.md)                                                       | `database`                              |
 | [The Personal Experience and Opinion](The-Personal-Experience-and-Opinion.md) | `think` `stance`                        |
