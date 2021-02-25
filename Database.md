@@ -28,6 +28,13 @@
   - 조회 시 연관된 데이터를 찾아야 함.
   - 연결되지 않은 데이터를 보면 직관적이지 않음.
 
+### 더 공부해봐야할 것
+
+- [ ] Index
+- [ ] Modeling
+- [ ] Backup: mysqldump, binary log
+- [ ] Cloud: AWS RDS, Google Cloud SQL, AZURE Database
+
 ## Index
 
 | Link                      | Tags                       |

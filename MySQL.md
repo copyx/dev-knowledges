@@ -76,6 +76,8 @@ MySQL에서는 Database와 Schema를 동의어로 사용함.
 
 > [CREATE DATABASE creates a database with the given name. To use this statement, you need the CREATE privilege for the database. CREATE SCHEMA is a synonym for CREATE DATABASE.](https://dev.mysql.com/doc/refman/8.0/en/create-database.html)
 
+MySQL 서버에 접속할 수 있는 클라이언트로는 기본적으로 제공되는 MySQL Monitor라는 CUI 프로그램이 있고, 이 외에도 MySQL Workbench 등 굉장히 다양함.
+
 ## SQL이란?
 
 **S**tructured **Q**uery **L**anguege
@@ -138,6 +140,13 @@ CREATE TABLE table_name(
 
 ```sql
 DESC table_name;
+```
+
+### 이름 변경
+
+```sql
+RENAME TABLE old_table TO new_table;
+ALTER TABLE old_table RENAME new_table;
 ```
 
 ## DATA 관련 명령
