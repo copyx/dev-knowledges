@@ -32,3 +32,14 @@ git stash drop <stash-name> # 이름 없으면 최근, 있으면 이름에 해�
 git stash pop # 적용 및 제거 한 번에
 git stash push
 ```
+
+## `shallow update not allowed` 오류 발생 시 대처법
+
+> TODO: 원인을 아직 모름. shallow가 무슨 의미인지도 잘 모름.
+> 구글링으로 해결책만 찾음.
+
+```bash
+git fetch --unshallow origin
+```
+
+참고: https://gist.github.com/gobinathm/96e27a588bb447154604963e09c38ddc
