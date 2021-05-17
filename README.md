@@ -28,3 +28,4 @@
 | [The Practice of Programming](The-Practice-of-Programming.md)                 | `book` `how_to_programming`             |
 | [Database](Database.md)                                                       | `database`                              |
 | [The Personal Experience and Opinion](The-Personal-Experience-and-Opinion.md) | `think` `stance`                        |
+| [Jest](Jest.md)                                                               | `test_framework` `javascript`           |
