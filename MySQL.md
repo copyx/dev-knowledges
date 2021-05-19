@@ -193,6 +193,30 @@ WHERE condition_expr;
 
 [DELETE Statement - MySQL](https://dev.mysql.com/doc/refman/8.0/en/delete.html)
 
+# OPERATOR
+
+## BETWEEN A AND B
+
+A와 B를 포함한 범위에 속하는지 판별
+
+# EXPLAIN
+
+쿼리의 실행 계획을 알고 싶을 때 사용하는 명령어. 쿼리의 앞에 붙여주면 됨.
+
+```sql
+EXPLAIN
+SELECT column[, column]
+FROM table
+```
+
+EXPLAIN을 JSON 포맷으로 보면 더 많은 정보를 알 수 있음.
+
+```sql
+EXPLAIN FORMAT=JSON
+SELECT column[, column]
+FROM table
+```
+
 # 참고자료
 
 [DATABASE2 - MySQL - 생활코딩](https://opentutorials.org/course/3161)
