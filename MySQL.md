@@ -217,6 +217,23 @@ SELECT column[, column]
 FROM table
 ```
 
+# Data Type
+
+## Enum
+
+Enum은 String 타입의 일종. 테이블 생성 시 컬럼 명세에 명시적으로 나열된 값들만 허용하는 문자열 객체.
+
+문자열과 인덱스(졍수) 2가지 데이터 사용 가능함. 일반적인 상황에서는 문자열 데이터가 사용되지만, 정수 데이터로 사용될 수 있음.
+
+```sql
+# 예: duration이 enum 타입
+SELECT DATE_ADD(lesson_at, INTERVAL duration MINUTE) # 이 경우 인덱스가 사용됨
+SELECT DATE_ADD(lesson_at, INTERVAL duration HOUR_MINUTE) # 이 경우 문자열이 사용됨
+
+# 명시적으로 표현하기 위해 CAST를 써줌
+DATE_ADD(lesson_at, INTERVAL CAST(duration AS CHAR) MINUTE)
+```
+
 # 참고자료
 
 [DATABASE2 - MySQL - 생활코딩](https://opentutorials.org/course/3161)
