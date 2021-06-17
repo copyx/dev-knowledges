@@ -173,6 +173,26 @@ function Example() {
 
 딱 한 번만 실행하고 싶다면 빈 배열(`[]`)을 전달하면 됨.
 
+#### Callback Hook
+
+함수 컴포넌트 내 함수를 선언하면 매번 재선언 됨. 이 때문에 생기는 불필요한 렌더링을 줄이기 위해 메모이제이션이 되도록 Callback 훅 사용.
+
+```jsx
+// 사용법
+import React, { useCallback } from "react";
+export default function Example({ a }) {
+  const onClick = useCallback(
+    (e) => {
+      console.log(a, e);
+    },
+    [a]
+  );
+  return <div onClick={onClick}>Example</div>;
+}
+```
+
+콜백 안에서 참조되는 모든 값은 의존성 배열에 있어야함. 리액트에서는 이를 자동으로 생성하는 것이 목표인 것으로 보임.
+
 ## React Element
 
 컴포넌트의 구성 요소. 불변객체라서 엘리먼트 생성 후 자식이나 속성을 변경할 수 없음. 마치 스냅샷처럼 요소의 특정 시점을 표현하고 있다고 생각하면 될 듯.
