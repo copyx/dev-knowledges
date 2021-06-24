@@ -29,3 +29,4 @@
 | [Database](Database.md)                                                       | `database`                              |
 | [The Personal Experience and Opinion](The-Personal-Experience-and-Opinion.md) | `think` `stance`                        |
 | [Jest](Jest.md)                                                               | `test_framework` `javascript`           |
+| [Visual Studio Code 자꾸 까먹는 유용한 단축키](VSC-shortcuts.md)              | `tool` `tip`                            |
