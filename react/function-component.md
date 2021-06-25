@@ -80,3 +80,32 @@ export default function Example({ a }) {
 ```
 
 콜백 안에서 참조되는 모든 값은 의존성 배열에 있어야함. 리액트에서는 이를 자동으로 생성하는 것이 목표인 것으로 보임.
+
+## Custom Hook
+
+중복적으로 사용되는 상태와 이벤트 핸들러 등을 컴포넌트와 완전히 분리해 사용 가능.
+
+```jsx
+import React, { useState } from "react";
+import "./App.css";
+
+const useInput = (initialValue) => {
+  const [value, setValue] = useState(initialValue);
+  const onChange = (event) => {
+    console.log(event.target);
+  };
+  return { value, onChange };
+};
+
+function App() {
+  const name = useInput("Mr.");
+  return (
+    <div className="App">
+      <h1>Hello</h1>
+      <input placeholder="Name" {...name} />
+    </div>
+  );
+}
+
+export default App;
+```
