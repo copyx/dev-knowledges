@@ -81,6 +81,27 @@ export default function Example({ a }) {
 
 콜백 안에서 참조되는 모든 값은 의존성 배열에 있어야함. 리액트에서는 이를 자동으로 생성하는 것이 목표인 것으로 보임.
 
+## Ref Hook
+
+어떤 요소를 직접 제어하거나 수정해야 할 때 사용하는 훅.
+
+### [Ref의 바람직한 사용 사례](https://ko.reactjs.org/docs/refs-and-the-dom.html#when-to-use-refs)
+
+- 포커스, 텍스트 선택영역, 혹은 미디어의 재생을 관리할 때.
+- 애니메이션을 직접적으로 실행시킬 때.
+- 서드 파티 DOM 라이브러리를 React와 같이 사용할 때.
+
+### 주의사항
+
+- 내용이 변경될 때 알려주지 않음
+- `.current` 프로퍼티를 변경해도 리렌더링이 발생하지 않음
+- ref가 DOM 노드에 붙거나 떨어질 때 어떤 코드를 추가하고 싶다면 [콜백 Ref](https://ko.reactjs.org/docs/hooks-faq.html#how-can-i-measure-a-dom-node) 사용
+
+### 참조
+
+https://ko.reactjs.org/docs/hooks-reference.html#useref<br/>
+https://ko.reactjs.org/docs/refs-and-the-dom.html
+
 ## Custom Hook
 
 중복적으로 사용되는 상태와 이벤트 핸들러 등을 컴포넌트와 완전히 분리해 사용 가능.
