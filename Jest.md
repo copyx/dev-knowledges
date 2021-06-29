@@ -4,6 +4,28 @@
 
 Jest에서 관련 API를 제공해줌.
 
+```javascript
+test("환불 가능 크레딧 옵션이 true면 해당 값을 함께 반환", async () => {
+  jest.useFakeTimers("modern");
+
+  // 환불 불가능 시간
+  jest.setSystemTime(new Date("2021-04-21 14:00:00"));
+  expect(await callFindLessonCreditInfo({ withRefundable: true })).toEqual({
+    usedAmount: 1,
+    refundableAmount: 0,
+  });
+
+  // 환불 가능 시간
+  jest.setSystemTime(new Date("2021-04-21 13:59:59"));
+  expect(await callFindLessonCreditInfo({ withRefundable: true })).toEqual({
+    usedAmount: 1,
+    refundableAmount: 1,
+  });
+
+  jest.useRealTimers();
+});
+```
+
 ### References
 
 - https://jestjs.io/docs/jest-object#jestusefaketimersimplementation-modern--legacy<br/>
