@@ -38,12 +38,11 @@ test("환불 가능 크레딧 옵션이 true면 해당 값을 함께 반환", as
 ```javascript
 test("GIVEN lessonAt is already reserved on the member, THEN an error should be thrown", async () => {
   await lessonDomain.reserveLesson(paramsToReserveLesson);
-  expect(
-    async () =>
-      await lessonDomain.reserveLesson({
-        ...paramsToReserveLesson,
-        teacherId: dummyTeacherIds[1],
-      })
+  await expect(
+    lessonDomain.reserveLesson({
+      ...paramsToReserveLesson,
+      teacherId: dummyTeacherIds[1],
+    })
   ).rejects.toThrow(
     new Error(
       errors.reject(
