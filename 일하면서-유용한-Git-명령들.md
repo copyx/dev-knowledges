@@ -43,3 +43,11 @@ git fetch --unshallow origin
 ```
 
 참고: https://gist.github.com/gobinathm/96e27a588bb447154604963e09c38ddc
+
+## 원격 저장소에서 삭제된 브랜치 정리
+
+원격 저장소에서는 삭제됐지만, 로컬에는 남아있는 브랜치를 한 번에 삭제하는 명령
+
+```bash
+git remote prune origin
+```
