@@ -389,3 +389,249 @@ function returnVoid(message: string): void {
 
 const r = returnVoid("without return"); // r은 void 타입. void 타입은 아무것도 못함.
 ```
+
+## Type System
+
+- 코드 작성자가 타입을 명시적으로 지정하는 시스템
+- 컴파일러가 자동으로 타입을 추론하는 시스템
+
+타입스크립트는 둘 모두 포함. 타입을 명시적으로 지정할 수 있고, 그렇지 않은 경우 컴파일러가 자동으로 타입을 추론.
+
+### 작성자와 사용자의 관점으로 코드 바라보기
+
+타입이란 해당 변수가 할 수 있는 일을 결정.
+
+```typescript
+function f(a) {
+  // a는 any로 추론됨
+  return a * 37;
+}
+console.log(f(10)); // 380
+console.log(f("test")); // NaN
+```
+
+위 함수는 number 타입 데이터 계산해 반환. 자바스크립트에서든 타입스크립트에서든, 위 코드는 정확한 사용법을 알기위해 함수의 내부나 문서를 확인해야함. NaN이라는 결과값은 원하지 않는 결과일 수 있음.
+
+Typescript의 `noImplicitAny` 옵션(암시적으로 any 타입이 추론되면 에러를 발생)을 켜면 위 코드에서 a 파라미터 부분에 에러가 발생해 컴파일이 되지 않음. 따라서 a에 타입을 지정해야됨.
+
+```typescript
+// noImplicitAny: true
+function f(a: number) {
+  if (a > 0) {
+    return a * 37;
+  }
+}
+console.log(f(10)); // 380
+console.log(f(-10) + 5); // NaN
+```
+
+양수는 정상 동작을 하지만 음수는 undefined를 반환하고, 여기에 수학적 계산을 하게되며 NaN을 출력함. f 함수는 추론을 통해 결과값의 타입이 number임을 알고 있음. 하지만 기본적으로 undefined도 number에 포함되어있어서 에러는 발생하지 않음.
+
+`strictNullChecks` 옵션(모든 타입에 자동으로 포함되어 있는 `null`과 `undefined` 제거)을 켜면, 함수의 리턴타입이 `number | undefined`로 추론됨. 그러면 뒤에 이어지는 f 함수의 결과값에 + 5를 더하는 연산은 불가능해짐.
+
+```typescript
+// noImplicitAny: true, strictNullChecks: true
+function f(a: number) {
+  if (a > 0) {
+    return a * 37;
+  }
+}
+console.log(f(-10) + 5); // error TS2532: Object is possibly 'undefined'.
+```
+
+이 때 함수의 리턴 타입을 number로 선언하면, 로직 상 undefined로 반환될 수 있기 때문에 에러 발생
+
+```typescript
+// noImplicitAny: true, strictNullChecks: true
+function f(a: number): number {
+  // error TS2366: Function lacks ending return statement and return type does not include 'undefined'
+  if (a > 0) {
+    return a * 37;
+  }
+}
+```
+
+`noImplicitReturns`: 함수 내에 리턴을 하지 않는 경로가 있으면 컴파일 에러를 발생.
+
+```typescript
+// noImplicitReturns: true
+function f(a: number): number {
+  if (a > 0) {
+    return a * 37;
+  }
+  // error TS7030: Not all code paths return a value.
+}
+```
+
+파라미터 타입이 object인 경우 해당 타입을 매번 명시하는 것이 불편쓰. 그래서 이를 따로 뽑아서 선언해놓을 수 있음.
+
+```typescript
+interface PersonInterface {
+  name: string;
+}
+
+type PersinTypeAlias = {
+  name: string;
+};
+
+function f(a: PersonInterface): string {
+  return a.name;
+}
+
+f("Jake"); // error TS2345: Argument of type 'string' is not assignable to parameter of type 'PersonInterface'.
+```
+
+> 개인적으로 다른 옵션들 다 괜찮은데 `noImplicitReturns`는 안켜도 되지 않을까 생각됨.
+
+### Structural Type System VS Nominal Type System
+
+타입스크립트는 Structural Type System을 따르고 있음.
+
+#### Structural Type System = 구조가 같으면 같은 타입
+
+```typescript
+interface IPerson {
+  name: string;
+}
+
+type PersonType = {
+  name: string;
+};
+
+let personInterface: IPerson = {} as any;
+let personType: PersonType = {} as any;
+
+personInterface = personType;
+personType = personInterface;
+```
+
+#### Nominal Type System = 구조가 같아도 이름이 다르면 다른 타입 (예: C, Java 등)
+
+```typescript
+// 자주 사용되는 방식은 아니지만 알아두면 좋은 예시
+type PersonID = string & { readonly brancd: unique symbol };
+function PersonID(id: string): PersonID {
+  return id as PersonID;
+}
+function getPersonById(id: PersonID) {}
+
+getPersonById(PersonID("id-aaa"));
+getPersonById("id-aaa"); // error TS2345: Argument of type 'string' is not assignable to parameter of type 'PersonID'. Type 'string' is not assignable to type '{ readonly brand: unique symbol; }'.
+```
+
+#### [Duck Typing](https://ko.wikipedia.org/wiki/%EB%8D%95_%ED%83%80%EC%9D%B4%ED%95%91)
+
+Python에서 사용하는 타입 시스템. Structural Type System과 비슷하지만 약간 다름.
+
+> 객체가 어떤 타입에 걸맞은 변수와 메소드를 지니면 객체를 해당 타입에 속하는 것으로 간주한다.
+
+Structural Type System은 Duck Typing을 컴파일 타임에 적용한 것으로 이해하면 쉬울 듯.
+
+```typescript
+interface IPerson {
+  name: string;
+  say(): void;
+  cry(): string;
+}
+
+type PersonType = {
+  name: string;
+  say(): void;
+};
+
+let personInterface: IPerson = {} as any;
+let personType: PersonType = {} as any;
+
+personInterface = personType; // cry가 PersonType에 없으므로 할당 불가
+personType = personInterface; // name과 say를 모두 만족하므로 할당 가능
+```
+
+참고: https://soopdop.github.io/2020/12/09/duck-typing/
+
+#### 추가 실험: 리턴 타입 void 함수와 다른 리턴 타입 함수의 비교
+
+```typescript
+interface IPerson {
+  name: string;
+  say(): void;
+}
+
+type PersonType = {
+  name: string;
+  say(): number;
+};
+
+let personInterface: IPerson = {} as any;
+let personType: PersonType = {} as any;
+
+personInterface = personType;
+// personType = personInterface; // say()에서 반환하는 형식이 달라 에러. 'void'는 'number'에 할당할 수 없다고 나옴.
+
+personInterface.say = function (): void {
+  console.log("void");
+};
+personType.say = function (): number {
+  console.log("number");
+  return 3;
+};
+
+const resultVoid = personInterface.say();
+const resultNumber = personType.say();
+
+console.log(resultVoid, resultNumber); // 3, 3
+```
+
+리턴 타입 void 함수 타입에는 리턴 타입 number 함수를 할당 가능. 반대는 불가능. 왜지?
+
+https://www.typescriptlang.org/docs/handbook/2/functions.html#return-type-void
+
+> Contextual typing with a return type of void does **not** force functions to **not** return something. Another way to say this is a contextual function type with a void return type (type vf = () => void), when implemented, can return any other value, but it will be ignored.
+
+무언가를 반환하지 말라고 강제하지는 않음.
+
+### 타입 호환성 (Type Compatibility)
+
+#### 1. 같거나 서브 타입인 경우, 할당이 가능하다. => 공변
+
+#### 2. 함수의 매개변수 타입만 같거나 슈퍼타입인 경우, 할당이 가능하다. => 반병 (`strictFunctionTypes` 옵션을 켠 경우)
+
+```typescript
+class Person {}
+class Developer extends Person {
+  coding() {}
+}
+class StartupDeveloper extends Developer {
+  burning() {}
+}
+
+function tellme(f: (d: Developer) => Developer) {}
+
+tellme((d: Developer): Developer => {
+  return new Developer();
+});
+
+tellme((d: Person): Developer => {
+  return new Developer();
+});
+
+tellme((d: StartupDeveloper): Developer => {
+  // 에러 발생
+  return new Developer();
+});
+```
+
+함수 내에서 콜백 호출한다고 생각했을 때, 콜백의 파라미터가 콜백을 호출하는 곳에서 전달하는 인자보다 서브타입이면 에러가 발생할 수 있음.
+
+### 타입 별칭 (Type Alias)
+
+이미 만들어진 타입에 이름만 붙여주는 것. Interface랑 비슷해 보임.
+
+```typescript
+type myString = string;
+type myStringAndNumber = string | number;
+type myTuple = [string, number];
+type myFunction = (a: string) => number;
+```
+
+> Alias와 Interface를 어떻게 구분해서 사용?<br/>
+> 강사님: 타입의 목적에 따라 구분. 이 타입이 사용되는 역할이 따로 있으면 Interface, 없으면 Alias
