@@ -227,7 +227,7 @@ union = "Mark";
 
 #### object
 
-원시 타입이 아닌 타입(Non-primitive type)이 아닌 것을 나타내고 싶을 때 사용하는 타입.
+원시 타입이 아닌 타입(Non-primitive type)을 나타내고 싶을 때 사용하는 타입.
 
 ```typescript
 const obj1: object = { a: 1, b: "ss" }; // 가능하지만 거의 안씀
