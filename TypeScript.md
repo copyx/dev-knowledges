@@ -98,7 +98,7 @@ a = 1;
   - Symbol (ECMAScript 6에서 추가됨)
   - Array : object 형
 - TypeScript에서 추가로 제공하는 자료형
-  - Any, Void, Never, Unknown
+  - any, void, never, unknown
   - Enum
   - Tuple : object 형
 
@@ -591,6 +591,8 @@ https://www.typescriptlang.org/docs/handbook/2/functions.html#return-type-void
 
 ### 타입 호환성 (Type Compatibility)
 
+https://docs.microsoft.com/ko-kr/dotnet/standard/generics/covariance-and-contravariance
+
 #### 1. 같거나 서브 타입인 경우, 할당이 가능하다. => 공변
 
 #### 2. 함수의 매개변수 타입만 같거나 슈퍼타입인 경우, 할당이 가능하다. => 반병 (`strictFunctionTypes` 옵션을 켠 경우)
@@ -635,3 +637,432 @@ type myFunction = (a: string) => number;
 
 > Alias와 Interface를 어떻게 구분해서 사용?<br/>
 > 강사님: 타입의 목적에 따라 구분. 이 타입이 사용되는 역할이 따로 있으면 Interface, 없으면 Alias
+
+## TypeScript Compiler
+
+[TypeScript Deep Dive](https://basarat.gitbook.io/typescript/)
+[TypeScript Deep Dive 한글 번역](https://radlohead.gitbook.io/typescript-deep-dive/)
+
+### Compilation Context
+
+컴파일 할 때 필요한 타입스크립트 설정 정보의 논리적인 묶음으로 구성된 맥락. 이를 선언할 때 좋은 방법은 tsconfig.json 파일을 이용하는 것.
+
+### tsconfig schema
+
+https://www.typescriptlang.org/tsconfig
+https://json.schemastore.org/tsconfig
+
+최상위 프로퍼티
+
+- compileOnSave
+- extends
+- compileOptions (가장 많이 사용하게될 설정)
+- files
+- include
+- exclude
+- references
+- ~~typeAcquisition~~
+- ~~tsNode~~
+
+### compileOnSave
+
+```json
+{
+  "compileOnSaveDefinition": {
+    "properties": {
+      "compileOnSave": {
+        "description": "Enable Compile-on-Save for this project.",
+        "type": "boolean"
+      }
+    }
+  }
+}
+```
+
+저장 시 컴파일해주는 옵션. 단, 에디터에서 지원해야함.
+
+- Visual Studio 2015 with TypeScript 1.8.4 이상
+- atom-typescript 플러그인
+
+별로 중요한 옵션은 아니랰ㅋㅋ 왜 가르쳐주는거야=\_=
+
+### extends
+
+```json
+{
+  "extendsDefinition": {
+    "properties": {
+      "extends": {
+        "description": "Path to base configuration file to inherit from. Requires TypeScript version 2.1 or later.",
+        "type": "string"
+      }
+    }
+  }
+}
+```
+
+상속받을 설정 파일을 명시하면 해당 파일을 상속.
+
+https://github.com/tsconfig/bases 에서 각 환경별로 tsconfig.json 파일을 제공함.
+
+### files, include, exclude
+
+```json
+{
+  "filesDefinition": {
+    "properties": {
+      "files": {
+        "description": "If no 'files' or 'include' property is present in a tsconfig.json, the compiler defaults to including all files in the containing directory and subdirectories except those specified by 'exclude'. When a 'files' property is specified, only those files and those specified by 'include' are included.",
+        "type": "array",
+        "uniqueItems": true,
+        "items": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "excludeDefinition": {
+    "properties": {
+      "exclude": {
+        "description": "Specifies a list of files to be excluded from compilation. The 'exclude' property only affects the files included via the 'include' property and not the 'files' property. Glob patterns require TypeScript version 2.0 or later.",
+        "type": "array",
+        "uniqueItems": true,
+        "items": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "includeDefinition": {
+    "properties": {
+      "include": {
+        "description": "Specifies a list of glob patterns that match files to be included in compilation. If no 'files' or 'include' property is present in a tsconfig.json, the compiler defaults to including all files in the containing directory and subdirectories except those specified by 'exclude'. Requires TypeScript version 2.0 or later.",
+        "type": "array",
+        "uniqueItems": true,
+        "items": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}
+```
+
+- files, include가 없으면 기본적으로 디렉토리 내 모든 ts파일을 컴파일함.
+- exclude, include는 Glob 패턴으로 작성 가능.
+- files에 명시된 파일들은 exclude와 겹쳐도 컴파일에 포함. include에 명시된 파일들은 exclude에 명시되면 컴파일에서 제외.
+- include 설정 시 \*를 사용하면, .ts / .tsx / .d.ts 확장자만 컴파일에 포함됨. (.js 파일은 안됨)
+- exclude 미설정 시 node_modules, bower_components, jspm_packages, \<outDir\>을 기본적으로 컴파일에서 제외
+
+### compileOptions - typeRoots, types
+
+타입을 사용하지 않는 외부 모듈(예: React) 사용 시 타입을 지정해주는 도구가 필요함. 기존에는 타입스크립트에서 자체 제공이 안됐고, 써드파티를 통해 이런 외부 모듈의 타입을 제공해주고 있었음.
+
+2.0 부터 @typs/react 같은 모듈을 통해 제공해주고 있음.
+
+```json
+{
+  "compileOptions": {
+    "typeRoots": {
+      "description": "Specify multiple folders that act like `./node_modules/@types`.",
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string"
+      },
+      "markdownDescription": "Specify multiple folders that act like `./node_modules/@types`.\n\nSee more: https://www.typescriptlang.org/tsconfig#typeRoots"
+    },
+    "types": {
+      "description": "Specify type package names to be included without being referenced in a source file.",
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string"
+      },
+      "markdownDescription": "Specify type package names to be included without being referenced in a source file.\n\nSee more: https://www.typescriptlang.org/tsconfig#types"
+    }
+  }
+}
+```
+
+- 아무 설정 안하면 @types(가 설치된 경우)에서 찾아서 사용
+- typeRoots를 사용하면, 배열의 경로들 아래에서만 가져옴
+- types를 사용하면, 배열 내 모듈 또는 @types 안의 모듈 이름에서 찾아옴
+  - 빈 배열([])을 넣으면 types 설정을 사용하지 않겠다는 의미
+- typesRoots와 types를 같이 사용하지 않음.
+
+### compileOptions - target, lib
+
+#### target
+
+- 어떤 런타임에서 실행할 수 있도록 컴파일 해줄지 결정하는 설정
+- 기본값은 ES3
+
+```json
+{
+  "compileOptions": {
+    "target": {
+      "description": "Set the JavaScript language version for emitted JavaScript and include compatible library declarations.",
+      "type": "string",
+      "default": "ES3",
+      "anyOf": [
+        {
+          "enum": [
+            "ES3",
+            "ES5",
+            "ES6",
+            "ES2015",
+            "ES2016",
+            "ES2017",
+            "ES2018",
+            "ES2019",
+            "ES2020",
+            "ES2021",
+            "ESNext"
+          ]
+        },
+        {
+          "pattern": "^([Ee][Ss]([356]|(20(1[56789]|2[01]))|[Nn][Ee][Xx][Tt]))$"
+        }
+      ],
+      "markdownDescription": "Set the JavaScript language version for emitted JavaScript and include compatible library declarations.\n\nSee more: https://www.typescriptlang.org/tsconfig#target"
+    }
+  }
+}
+```
+
+#### lib
+
+- 실행환경 따라 가져와야하는 기본 타입을 명시하는 설정
+- target에 따라 기본적으로 설정되는 것들이 있음
+  - if target = 'ES3', default lib = [lib.d.ts]
+  - if target = 'ES5', default lib = [dom, es5, scripthost]
+  - if target = 'ES6', default lib = [dom, es6, dom.iterable, scripthost]
+- lib를 설정하면 명시된 라이브러리만 사용
+
+```json
+{
+  "compileOptions": {
+    "lib": {
+      "description": "Specify a set of bundled library declaration files that describe the target runtime environment.",
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "anyOf": [
+          {
+            "enum": [
+              "ES5",
+              "ES6",
+              "ES2015",
+              "ES2015.Collection",
+              "ES2015.Core",
+              "ES2015.Generator",
+              "ES2015.Iterable",
+              "ES2015.Promise",
+              "ES2015.Proxy",
+              "ES2015.Reflect",
+              "ES2015.Symbol.WellKnown",
+              "ES2015.Symbol",
+              "ES2016",
+              "ES2016.Array.Include",
+              "ES2017",
+              "ES2017.Intl",
+              "ES2017.Object",
+              "ES2017.SharedMemory",
+              "ES2017.String",
+              "ES2017.TypedArrays",
+              "ES2018",
+              "ES2018.AsyncGenerator",
+              "ES2018.AsyncIterable",
+              "ES2018.Intl",
+              "ES2018.Promise",
+              "ES2018.Regexp",
+              "ES2019",
+              "ES2019.Array",
+              "ES2019.Object",
+              "ES2019.String",
+              "ES2019.Symbol",
+              "ES2020",
+              "ES2020.BigInt",
+              "ES2020.Promise",
+              "ES2020.String",
+              "ES2020.Symbol.WellKnown",
+              "ESNext",
+              "ESNext.Array",
+              "ESNext.AsyncIterable",
+              "ESNext.BigInt",
+              "ESNext.Intl",
+              "ESNext.Promise",
+              "ESNext.String",
+              "ESNext.Symbol",
+              "DOM",
+              "DOM.Iterable",
+              "ScriptHost",
+              "WebWorker",
+              "WebWorker.ImportScripts",
+              "Webworker.Iterable",
+              "ES7",
+              "ES2021",
+              "ES2020.SharedMemory",
+              "ES2020.Intl",
+              "ES2021.Promise",
+              "ES2021.String",
+              "ES2021.WeakRef",
+              "ESNext.WeakRef"
+            ]
+          },
+          {
+            "pattern": "^[Ee][Ss]5|[Ee][Ss]6|[Ee][Ss]7$"
+          },
+          {
+            "pattern": "^[Ee][Ss]2015(\\.([Cc][Oo][Ll][Ll][Ee][Cc][Tt][Ii][Oo][Nn]|[Cc][Oo][Rr][Ee]|[Gg][Ee][Nn][Ee][Rr][Aa][Tt][Oo][Rr]|[Ii][Tt][Ee][Rr][Aa][Bb][Ll][Ee]|[Pp][Rr][Oo][Mm][Ii][Ss][Ee]|[Pp][Rr][Oo][Xx][Yy]|[Rr][Ee][Ff][Ll][Ee][Cc][Tt]|[Ss][Yy][Mm][Bb][Oo][Ll].[Ww][Ee][Ll][Ll][Kk][Nn][Oo][Ww][Nn]|[Ss][Yy][Mm][Bb][Oo][Ll]))?$"
+          },
+          {
+            "pattern": "^[Ee][Ss]2016(\\.[Aa][Rr][Rr][Aa][Yy].[Ii][Nn][Cc][Ll][Uu][Dd][Ee])?$"
+          },
+          {
+            "pattern": "^[Ee][Ss]2017(\\.([Ii][Nn][Tt][Ll]|[Oo][Bb][Jj][Ee][Cc][Tt]|[Ss][Hh][Aa][Rr][Ee][Dd][Mm][Ee][Mm][Oo][Rr][Yy]|[Ss][Tt][Rr][Ii][Nn][Gg]|[Tt][Yy][Pp][Ee][Dd][Aa][Rr][Rr][Aa][Yy][Ss]))?$"
+          },
+          {
+            "pattern": "^[Ee][Ss]2018(\\.([Aa][Ss][Yy][Nn][Cc][Ii][Tt][Ee][Rr][Aa][Bb][Ll][Ee]|[Ii][Nn][Tt][Ll]|[Pp][Rr][Oo][Mm][Ii][Ss][Ee]|[Rr][Ee][Gg][Ee][Xx][Pp]))?$"
+          },
+          {
+            "pattern": "^[Ee][Ss]2019(\\.([Aa][Rr][Rr][Aa][Yy]|[Oo][Bb][Jj][Ee][Cc][Tt]|[Ss][Tt][Rr][Ii][Nn][Gg]|[Ss][Yy][Mm][Bb][Oo][Ll]))?$"
+          },
+          {
+            "pattern": "^[Ee][Ss]2020(\\.([Bb][Ii][Gg][Ii][Nn][Tt]|[Pp][Rr][Oo][Mm][Ii][Ss][Ee]|[Ss][Tt][Rr][Ii][Nn][Gg]|[Ss][Yy][Mm][Bb][Oo][Ll].[Ww][Ee][Ll][Ll][Kk][Nn][Oo][Ww][Nn]))?$"
+          },
+          {
+            "pattern": "^[Ee][Ss]2021(\\.([Ii][Nn][Tt][Ll]|[Pp][Rr][Oo][Mm][Ii][Ss][Ee]|[Ss][Tt][Rr][Ii][Nn][Gg]|[Ww][Ee][Aa][Kk][Rr][Ee][Ff]))?$"
+          },
+          {
+            "pattern": "^[Ee][Ss][Nn][Ee][Xx][Tt](\\.([Aa][Rr][Rr][Aa][Yy]|[Aa][Ss][Yy][Nn][Cc][Ii][Tt][Ee][Rr][Aa][Bb][Ll][Ee]|[Bb][Ii][Gg][Ii][Nn][Tt]|[Ii][Nn][Tt][Ll]|[Pp][Rr][Oo][Mm][Ii][Ss][Ee]|[Ss][Tt][Rr][Ii][Nn][Gg]|[Ss][Yy][Mm][Bb][Oo][Ll]|[Ww][Ee][Aa][Kk][Rr][Ee][Ff]))?$"
+          },
+          {
+            "pattern": "^[Dd][Oo][Mm](\\.[Ii][Tt][Ee][Rr][Aa][Bb][Ll][Ee])?$"
+          },
+          {
+            "pattern": "^[Ss][Cc][Rr][Ii][Pp][Tt][Hh][Oo][Ss][Tt]$"
+          },
+          {
+            "pattern": "^[Ww][Ee][Bb][Ww][Oo][Rr][Kk][Ee][Rr](\\.[Ii][Mm][Pp][Oo][Rr][Tt][Ss][Cc][Rr][Ii][Pp][Tt][Ss])?$"
+          }
+        ]
+      },
+      "markdownDescription": "Specify a set of bundled library declaration files that describe the target runtime environment.\n\nSee more: https://www.typescriptlang.org/tsconfig#lib"
+    }
+  }
+}
+```
+
+### compileOptions - outFile, outDir, rootDir
+
+```json
+{
+  "compileOptions": {
+    "outFile": {
+      "description": "Specify a file that bundles all outputs into one JavaScript file. If `declaration` is true, also designates a file that bundles all .d.ts output.",
+      "type": "string",
+      "markdownDescription": "Specify a file that bundles all outputs into one JavaScript file. If `declaration` is true, also designates a file that bundles all .d.ts output.\n\nSee more: https://www.typescriptlang.org/tsconfig#outFile"
+    },
+    "outDir": {
+      "description": "Specify an output folder for all emitted files.",
+      "type": "string",
+      "markdownDescription": "Specify an output folder for all emitted files.\n\nSee more: https://www.typescriptlang.org/tsconfig#outDir"
+    },
+    "rootDir": {
+      "description": "Specify the root folder within your source files.",
+      "type": "string",
+      "markdownDescription": "Specify the root folder within your source files.\n\nSee more: https://www.typescriptlang.org/tsconfig#rootDir"
+    }
+  }
+}
+```
+
+- outFile: 하나의 파일로 만들어줌. 단, system이나 amd 방식의 모듈만 가능.
+- outDir: 설정한 디렉토리에 컴파일된 파일들이 동일한 구조로 생성됨
+- rootDir: 컴파일 대상 파일들의 루트 디렉토리 설정. 설정하지 않으면 컴파일 대상이 되는 파일의 가장 바깥 디렉토리를 루트 디렉토리로 인식. tsconfig.json이 있는 프로젝트 최상단 폴더가 항상 루트 디렉토리가 되는 것이 아님.
+
+### compileOptions - strict
+
+항상 strict를 true로 켜는 것이 좋음.
+
+```json
+{
+  "compileOptions": {
+    "strict": {
+      "description": "Enable all strict type checking options.",
+      "type": "boolean",
+      "default": false,
+      "markdownDescription": "Enable all strict type checking options.\n\nSee more: https://www.typescriptlang.org/tsconfig#strict"
+    }
+  }
+}
+```
+
+#### noImplicitAny
+
+추론으로 any 타입이 지정되는 것을 방지
+
+- suppressImplicitAnyIndexErrors
+  - object에 없는 프로퍼티를 추가할 때, 해당 프로퍼티가 any로 추론되서 생기는 오류를 발생시키지 않음
+
+#### noImplicitThis
+
+this에 대해 타입을 설정하지 않을 때 오류 발생. 타입스크립트 전용 문법으로 this에 타입 적용 가능.
+
+```typescript
+// 원래 자바스크립트에서 this는 예약어라 에러 발생
+function fn(this: { a: number; b: string }, a: number, b: string) {
+  this.a = a;
+  this.b = b;
+  return this;
+}
+```
+
+단, class에서는 this를 사용해도 noImplicitThis 에러가 발생하지 않음.
+
+#### strictNullChecks
+
+모든 타입이 기본적으로 갖고있는 null과 undefined를 제거하는 옵션. 단, void에는 undefined를, any는 null과 undefined를 가질 수 있음.
+
+#### strictFunctionTypes
+
+Bivariant 매개변수 검사를 비활성화.
+
+함수의 반환 타입은 공변적이어야 하고, 인자 타입은 반 공변적이어야 함.
+
+> 왜지? 콜백을 설정하는 상황에서 생각해보자
+>
+> 콜백은 인자도, 반환값도 다른 함수에 의해 처리됨.
+> 인자의 경우 콜백에 전달하기로 한 것보다 더 많은 것을 가진 타입을 바랄 수 없음. 따라서 반 공변적일 수 밖에 없음.
+> 반환값의 경우 콜백에서 반환하기로 약속한 것보다 더 적은 것을 가진 타입을 반환하면 안됨. 그래서 공변적일 수 밖에 없는 것임.
+>
+> ```typescript
+> function fn(cb: argDerived => retBase) {
+>   const arg: argDerived;
+>   const ret = cb(argDerived); // ret: retBase;
+>   // ret로 무언가 연산을 진행
+> }
+> ```
+
+#### strictPropertyInitialization
+
+undefined가 아닌 클래스 속성들이 초기화됐는지 확인하는 옵션. --strictNullChecks이 설정되어 있어야 사용 가능.
+
+#### strictBindCallApply
+
+bind, call, apply를 사용할 때 더 엄격하게 체크하도록 하는 설정
+
+- bind: this와 인자를 함수와 묶어주는 역할
+- call: this와 인자를 함수와 묶어서 호출. 여러 인자를 call의 인자로 나열.
+- apply: this와 인자를 함수와 묶어서 호출. 여러 인자를 배열 하나에 넣어서 apply에 배열 하나만 전달.
+
+#### alwaysStrict
+
+엄격 모드로 코드를 분석하고 모든 소스 파일에 "use strict"를 추가해줌.
+
+#### [useUnknownInCatchVariables](https://www.typescriptlang.org/tsconfig#useUnknownInCatchVariables)
+
+catch 구문의 변수 타입을 any에서 unknown으로 변경해주는 설정. 타입스크립트 4.0부터 지원
