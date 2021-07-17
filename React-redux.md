@@ -4,7 +4,7 @@ React를 위한 공식적인 Redux UI 바인딩 라이브러리.
 
 ## Hooks
 
-Functional Component와 함께 사용하기 위한 훅 API들. 훅을 사용하려면 `<Provider>` 컴포넌트로 앱 전체를 감싸야함.
+Function Component와 함께 사용하기 위한 훅 API들. 훅을 사용하려면 `<Provider>` 컴포넌트로 앱 전체를 감싸야함.
 
 ```jsx
 const store = createStore(rootReducer);
