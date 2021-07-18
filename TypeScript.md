@@ -1046,6 +1046,12 @@ Bivariant 매개변수 검사를 비활성화.
 >   // ret로 무언가 연산을 진행
 > }
 > ```
+>
+> - 가변성(Variance) : 특정 타입의 객체를 다른 타입의 객체로 변환할 수 있는 성격을 말한다.
+> - 공변성(Covariant) : a -> b가 가능할 때 C\<T\>가 C\<a\> -> C\<b\>로 가능하다면 이는 공변이다.
+> - 반공변성(Contravariant) : a -> b가 가능할 때 C\<T\>가 C\<b\> -> C\<a\>로 사용 가능하다면 이는 반공변이다.
+
+출처: https://sticky32.tistory.com/entry/C-공변성과-반공변성이란 [Sticky]
 
 #### strictPropertyInitialization
 
@@ -1066,3 +1072,251 @@ bind, call, apply를 사용할 때 더 엄격하게 체크하도록 하는 설�
 #### [useUnknownInCatchVariables](https://www.typescriptlang.org/tsconfig#useUnknownInCatchVariables)
 
 catch 구문의 변수 타입을 any에서 unknown으로 변경해주는 설정. 타입스크립트 4.0부터 지원
+
+## Interfaces
+
+### What are Interfaces
+
+interface는 자바스크립트에는 없는 문법. 컴파일 타임에만 필요한 기능. 타입스크립트에서 타입 선언의 기반이 되는 부분.
+
+### Optional Property
+
+특정 프로퍼티를 선택적으로 넣을 수 있도록 만들어주는 문법.
+
+```typescript
+interface Person2 {
+  name: string;
+  age?: number;
+}
+
+function hello2(person: Person2): void {
+  console.log(`Hi, I'm ${person.name}`);
+}
+
+hello2({ name: "Jake", age: 33 });
+hello2({ name: "Jake" });
+```
+
+### Index Signature
+
+옛날 이름이 Indexable Type이었던 듯. 공홈에서 검색은 되는데 Deprecated 됐다고 나옴. 현재 이름은 Index Signature.
+
+아직 프로퍼티의 이름을 알 수 없을 때 사용. index의 타입은 string과 number만 가능.
+
+```typescript
+interface Person3 {
+  name: string;
+  age?: number;
+  [index: string]: any;
+}
+
+function hello3(person: Person3): void {
+  console.log(`Hi, I'm ${person.name}`);
+}
+
+hello3({
+  name: "Jake",
+  age: 33,
+});
+hello3({
+  name: "Jake2",
+  systers: ["Ann", "Anne", "Anna"],
+});
+```
+
+Index Signature를 사용하면, 다른 프로퍼티들도 Index Signature에 명시된 타입에 부합해야됨. 그 이유는 `obj['property']`로 인터페이스에 명시된 프로퍼티에 접근할 때 Index Signature에 명시된대로 타입을 체크하기 때문.
+
+### Function in Interface
+
+인터페이스에 함수 프로퍼티를 추가 가능
+
+```typescript
+interface Person4 {
+  name: string;
+  age: number;
+  hello(): void;
+}
+
+const p41: Person4 = {
+  name: "Jake",
+  age: 33,
+  hello: function (): void {
+    console.log(`Hi, I'm ${this.name}`);
+  },
+};
+
+const p42: Person4 = {
+  name: "Jake2",
+  age: 33,
+  hello(): void {
+    console.log(`Hi, I'm ${this.name}`);
+  },
+};
+
+// const p43: Person4 = {
+//   name: 'Jake',
+//   age: 33,
+//   hello: (): void => { // Arrow Function의 this에 객체가 바인딩되지 않아서 오류 발생
+//     console.log(`Hi, I'm ${this.name}`);
+//   },
+// };
+
+p41.hello();
+p42.hello();
+```
+
+### Class Implements Interface
+
+`implements` 키워드를 이용해 선언해놓은 인터페이스를 클래스로 구현할 수 있음.
+
+```typescript
+interface IPerson1 {
+  name: string;
+  age?: number;
+  hello(): void;
+}
+
+class CPerson implements IPerson1 {
+  name: string;
+  age?: number;
+
+  constructor(name: string) {
+    this.name = name;
+  }
+
+  hello(): void {
+    console.log(`Hi, I'm ${this.name}`);
+  }
+}
+
+const cPerson: IPerson1 = new CPerson("Jake");
+cPerson.hello();
+```
+
+VSCode에 인터페이스의 속성 중 미구현된 내용을 자동 추가해주는 기능이 있음. 짱 편함.
+
+### Interface Extends Interface
+
+다른 인터페이스를 상속 가능. 상속받는 인터페이스에 존재하는 속성을 재정의하는 것도 가능하지만, 해당 속성 타입의 서브타입만 가능!
+
+```typescript
+interface IPerson2 {
+  name: string;
+  age?: number;
+}
+
+interface IKorean extends IPerson2 {
+  name: "Jake";
+  city: string;
+}
+
+const kr: IKorean = {
+  name: "Jake",
+  city: "Seoul",
+};
+```
+
+### Function Interface
+
+```typescript
+interface HelloPerson {
+  (name: string, age?: number): void;
+}
+
+// const helloPerson: HelloPerson = function(name: string, age: number) {
+// 함수의 파라미터는 반공변적이어야 하므로 age가 필수로 바뀌면 대입 불가능
+const helloPerson: HelloPerson = function (name: string) {
+  console.log(`Hi, I'm ${name}`);
+};
+
+helloPerson("Jake");
+```
+
+### Readonly Interface Properties
+
+프로퍼티의 값을 초기화 외에 변경 불가능하도록 하는 키워드
+
+```typescript
+interface Person8 {
+  name: string;
+  age?: number;
+  readonly gender: string;
+}
+
+const p81: Person8 = {
+  name: "Jake",
+  gender: "male",
+};
+
+// p81.gender = 'female'; // Readonly 프로퍼티라 변경 불가 에러
+```
+
+### Type Alias VS Interface
+
+#### function
+
+```typescript
+type EatType = (food: string) => void);
+interface IEat {
+  (food: string): void;
+}
+```
+
+#### array
+
+```typescript
+type PersonList = string[];
+interface IPersonList {
+  [index: number]: string;
+}
+```
+
+#### Intersection
+
+```typescript
+interface ErrorHandling {
+  success: boolean;
+  error?: { message: string };
+}
+interface ArtistsData {
+  artists: { name: string }[];
+}
+
+type ArtistsResponseType = ArtistsData & ErrorHandling;
+interface IArtistsResponse extends ArtistsData, ErrorHandling {}
+
+let art: ArtistsResponseType;
+let iar: IArtistsResponse;
+```
+
+#### Union Types
+
+```typescript
+interface Bird {
+  fly(): void;
+  layEggs(): void;
+}
+interface Fish {
+  swim(): void;
+  layEggs(): void;
+}
+
+type PetType = Bird | Fish;
+// 인터페이스로는 union타입을 표현할 수 없음.
+```
+
+#### Declaration Merging
+
+써드파티 라이브러리의 타입에 속성을 추가하고 싶을 때, 원본 타입의 코드를 수정하지 않고 Declaration Merging을 통해 추가 가능.
+
+```typescript
+interface MergingInterface {
+  a: string;
+}
+interface MergingInterface {
+  b: string;
+}
+
+let mi: MergingInterface; // a, b 프로퍼티 모두 함께 선언됨
+// Type Alias는 불가능
+```
