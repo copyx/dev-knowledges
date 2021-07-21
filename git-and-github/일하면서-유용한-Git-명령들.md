@@ -51,3 +51,15 @@ git fetch --unshallow origin
 ```bash
 git remote prune origin
 ```
+
+## filter-branch
+
+https://git-scm.com/docs/git-filter-branch
+
+브랜치를 재작성할 수 있는 기능. 단순히 브랜치의 히스토리를 뒤져서 파일을 삭제하는 기능이 아닌, 특정 파일이나 폴더를 기준으로 히스토리를 다시 작성할 수 있는 기능을 갖고 있음.
+
+### 전체 히스토리에서 특정 파일 삭제
+
+```bash
+git filter-branch --tree-filter 'rm -rf ./node_modules' HEAD
+```
