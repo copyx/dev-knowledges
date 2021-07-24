@@ -1,4 +1,4 @@
-# CSS
+# React and CSS
 
 `Component.module.css`와 같은 형식으로 CSS 파일을 만들어서 컴포넌트 범위로 사용 가능.
 
