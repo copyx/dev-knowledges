@@ -34,3 +34,5 @@
 | [TypeScript](TypeScript.md)                                                   | `javascript` `typescript` `language`    |
 | [Axios](Axios.md)                                                             | `javascript` `http` `library`           |
 | [CSS](CSS.md)                                                                 | `css`                                   |
+| [WebSocket](WebSocket.md)                                                     | `communication` `web`                   |
+| [WebRTC](WebRTC.md)                                                           | `communication` `web`                   |
