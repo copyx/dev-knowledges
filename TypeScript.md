@@ -1494,3 +1494,131 @@ class ExtendingPerson extends AbstractPerson {
 const ep = new ExtendingPerson();
 ep.setName("Jake");
 ```
+
+## Generics
+
+타입만 달라지고 로직이나 구조는 반복 될 때, 이 중복을 줄이기 위해 고안된 기능.
+
+```typescript
+function helloGeneric<T>(message: T): T {
+  return message;
+}
+
+console.log(helloGeneric("Jake").length);
+console.log(helloGeneric(33));
+console.log(helloGeneric(true));
+```
+
+타입 추론이 가능하다는 부분에서 Any를 사용하는 것과는 큰 차이가 있음.
+
+```typescript
+function helloBasic<T>(message: T): T {
+  return message;
+}
+
+helloBasic<string>("Jake"); // 직접 타입 지정
+helloBasic(33); // 타입 추론
+```
+
+타입을 지정하지 않으면 전달받은 입력값을 통해 추론함.
+
+### Array & Tuple
+
+```typescript
+function helloArray<T>(message: T[]): T {
+  return message[0];
+}
+
+helloArray(["hello", "world"]);
+helloArray(["hello", 5]);
+
+function helloTuple<T, U>(message: [T, U]): T {
+  return message[0];
+}
+
+helloTuple(["hello", "world"]);
+helloTuple(["hello", 5]);
+```
+
+### Function
+
+Generic도 타입으로 취급한다고 이해함. 맞나?
+
+```typescript
+type FunctionGeneric1 = <T>(a: T) => T;
+const function1: FunctionGeneric1 = <T>(a: T): T => a;
+
+interface FunctionGeneric2 {
+  <T>(a: T): T;
+}
+const function2: FunctionGeneric2 = <T>(a: T): T => a;
+```
+
+- 참고: https://www.typescriptlang.org/docs/handbook/2/generics.html#generic-types
+
+### Class
+
+```typescript
+class GenericClass<T> {
+  private _name: T;
+  constructor(name: T) {
+    this._name = name;
+  }
+}
+
+new GenericClass("Jake");
+new GenericClass<string>("Jake");
+// new GenericClass<string>(11); // Error
+```
+
+### Generic Constraints: `extends`
+
+타입변수가 가져야하는 속성 등을 명시해 특정 타입만 제너릭에 사용할 수 있도록 제한 가능. 문법을 그대로 읽어서 이해해보면 타입 변수에 들어오는 타입이 extends로 명시된 것들을 상속해야만 한다고 할 수 있음.
+
+```typescript
+class PersonExtends<T extends string | number> {
+  private _name: T;
+  constructor(name: T) {
+    this._name = name;
+  }
+}
+
+new PersonExtends("Jake");
+new PersonExtends(33);
+// new PersonExtends(true); // Error
+```
+
+### `keyof`
+
+`keyof`를 이용해 객체의 필드를 특정해 타입 지정 가능
+
+```typescript
+(() => {
+  interface TestType {
+    name: string;
+    age: number;
+  }
+
+  const p: TestType = {
+    name: "Jake",
+    age: 33,
+  };
+
+  // 유니온 타입으로 하게되면 필드별로 타입 구분이 자동적으로 되지 않음.
+  // function getProp(obj: TestType, key: string | number): string | number {
+  //   return obj[key];
+  // }
+
+  function getProp<T, K extends keyof T>(obj: T, key: K): T[K] {
+    return obj[key];
+  }
+
+  getProp(p, "age");
+
+  function setProp<T, K extends keyof T>(obj: T, key: K, value: T[K]): void {
+    obj[key] = value;
+  }
+
+  setProp(p, "age", 33);
+})();
+```
