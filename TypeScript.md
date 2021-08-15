@@ -1320,3 +1320,177 @@ interface MergingInterface {
 let mi: MergingInterface; // a, b 프로퍼티 모두 함께 선언됨
 // Type Alias는 불가능
 ```
+
+## Classes
+
+- Object를 만드는 설계도
+- ES6 전에는 `function`으로, 후에는 `class` 키워드 사용.
+- 타입스크립트에서는 타입의 일종.
+
+### Contructor & Initialize
+
+`strictPropertyInitialization` 설정이 켜져있으면 클래스 속성을 초기화하지 않을 시 에러 발생. 단, 클래스 속성에 `!`를 붙이면 초기화하지 않아도 됨.
+
+```typescript
+class CPerson1 {
+  name: string = "Jake";
+  age!: number;
+}
+
+const cp1 = new CPerson1();
+console.log(cp1);
+```
+
+생성자는 async function이 될 수 없음.
+
+- 참고: https://www.typescriptlang.org/docs/handbook/2/classes.html#--strictpropertyinitialization
+
+### Access Modifier
+
+- `public`: 외부에서 접근 가능
+- `private`: 내부에서만 접근 가능
+- `protected`: 외부에서 접근 불가능하지만, 상속받은 클래스에서는 접근 가능
+
+### Intialize By Constructor
+
+클래스 속성을 선언하지 않고 생성자의 파라미터 부분에서 선언 가능.
+
+```typescript
+class CPerson3 {
+  constructor(public name: string, public age: number) {}
+}
+
+const cp3 = new CPerson3("Jake", 33);
+console.log(cp3);
+```
+
+파라미터 앞에 접근제어자를 붙여주면 해당 속성들이 자동 선언됨.
+
+### Getter & Setter
+
+특정 속성을 Read/Write 할 때 사용되도록 강제할 수 있는 메소드. 단, 실제 속성과 이름이 겹치면 안됨. Getter/Setter에 사용된 키워드 자체가 속성처럼 사용됨.
+
+```typescript
+class CPerson4 {
+  constructor(public _name: string, public age: number) {}
+  get name() {
+    console.log("get");
+    return this._name;
+  }
+  set name(n: string) {
+    console.log("set");
+    this._name = n;
+  }
+}
+
+const cp4 = new CPerson4("Jake", 33);
+console.log(cp4.name);
+cp4.name = "test";
+console.log(cp4.name);
+```
+
+### `readonly` 프로퍼티
+
+클래스에 읽기만 가능한 프로퍼티를 선언 가능
+
+```typescript
+class CPerson5 {
+  public readonly name: string = "Jake";
+  private readonly contry: string = "Korea";
+
+  f() {
+    // this.country = 'USA'; // Error
+  }
+}
+
+const cp5 = new CPerson5();
+// cp5.name = 'Fake'; // Error
+```
+
+### Index Signature in Class
+
+클래스 안에서도 인덱스 시그니쳐 사용 가능.
+
+```typescript
+class Students {
+  [index: string]: "male" | "female";
+}
+
+const a = new Students();
+a.jake = "male";
+a.fake = "male";
+
+console.log(a);
+```
+
+### Static Properties & Methods
+
+```typescript
+class Static {
+  private static CITY = "Seoul";
+  public hello() {
+    console.log("hi", Static.CITY);
+  }
+  public change() {
+    Static.CITY = "LA";
+  }
+}
+
+const one = new Static();
+
+one.hello();
+one.change();
+
+const another = new Static();
+
+one.hello();
+```
+
+### Inheritance
+
+```typescript
+class Parent {
+  constructor(protected _name: string, private _age: number) {}
+  public print(): void {
+    console.log(`Hi, I'm ${this._name} and ${this._age} years old.`);
+  }
+}
+
+const p = new Parent("Jake", 33);
+p.print();
+
+class Child extends Parent {
+  public gender = "male";
+  constructor(age: number) {
+    super("Fake", age);
+  }
+}
+
+const child = new Child(1);
+// const child2 = new Child("Jake", 33); // Error because of constructor overriding
+child.print();
+```
+
+### Abstract Classes
+
+불완전한 클래스. 클래스 내 추상 메소드를 구현해야만 인스턴스 생성 가능.
+
+추상 메소드는 구현 없이 함수 시그니처만 존재함.
+
+```typescript
+abstract class AbstractPerson {
+  protected _name: string = "Jake";
+  abstract setName(name: string): void;
+}
+
+// new AbstractPerson(); // Error
+
+class ExtendingPerson extends AbstractPerson {
+  setName(name: string): void {
+    this._name = name;
+  }
+}
+
+const ep = new ExtendingPerson();
+ep.setName("Jake");
+```
