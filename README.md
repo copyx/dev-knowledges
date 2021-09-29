@@ -14,10 +14,8 @@
 | ----------------------------------------------------------------------------- | --------------------------------------- |
 | [REST](REST.md)                                                               | `web` `api` `architecture` `backend`    |
 | [Fetch API](Fetch-API.md)                                                     | `web` `web-api` `javascript` `frontend` |
-| [Javascript 소수점 처리](Javascript-소수점-처리.md)                           | `javascript`                            |
-| [ES6 변경사항](ES6-변경사항.md)                                               | `javascript`                            |
+| [Javascript](javascript/index.md)                                             | `javascript`                            |
 | [Koa](Koa.md)                                                                 | `javascript` `web` `backend`            |
-| [Javascript "use strict"](Javascript-use-strict.md)                           | `javascript`                            |
 | [서버 개발 환경의 구분과 역할](서버-개발-환경의-구분과-역할.md)               | `ops` `backend`                         |
 | [React](react/index.md)                                                       | `javascript` `web` `frontend`           |
 | [Redux](Redux.md)                                                             | `javascript` `web` `frontend`           |
