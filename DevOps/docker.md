@@ -163,6 +163,66 @@ docker-compose build # build로 선언된 컨테이너 빌드
 docker-compose build db # 특정 컨테이너만 컨테이너 빌드
 ```
 
+## Image
+
+- 레이어드 파일 시스템 기반 (AUFS, BTRFS, Overlayfs, ...)
+- 프로세스가 실행되는 파일들의 집합(환경)
+- 프로세스는 환경(파일)을 변경할 수 있음
+- 이 환경을 저장해서 새로운 이미지를 생성
+
+![Docker Custom Image](images/docker_custom_image.png)
+
+이미지의 네이밍 규칙은 다음과 같음
+
+> namespace(보통 사용자 ID)/image-name:tag
+
+### `docker commit`
+
+이미 생성된 컨테이너를 기반으로 이미지를 생성하는 명령
+
+```bash
+docker commit <container> <image>
+```
+
+### `docker build`
+
+Dockerfile을 기반으로 이미지를 생성하는 명령
+
+```bash
+# docker build -t {image-name:tag} {build-context}
+docker build -t sample:release .
+```
+
+| Option |     Description      |
+| :----: | :------------------: |
+|   -t   |   이미지 이름 지정   |
+|   -f   | Dockerfile 경로 지정 |
+
+### Dockerfile
+
+https://docs.docker.com/engine/reference/builder/
+
+| Instruction |                     Description                      |
+| :---------: | :--------------------------------------------------: |
+|    FROM     |                     기본 이미지                      |
+|     RUN     |                    쉘 명령어 실행                    |
+|     CMD     | 컨테이너 기본 실행 명령어 (Entrypoint의 인자로 사용) |
+|   EXPOSE    |                  오픈되는 포트 정보                  |
+|     ENV     |                    환경변수 설정                     |
+|     ADD     |      파일 또는 디렉토리 추가. URL/ZIP 사용 가능      |
+|    COPY     |               파일 또는 디렉토리 추가                |
+| ENTRYPOINT  |              컨테이너 기본 실행 명령어               |
+|   VOLUME    |               외부 마운트 포인트 생성                |
+|    USER     |        RUN, CMD, ENTRYPOINT를 실행하는 사용자        |
+|   WORKDIR   |                  작업 디렉토리 설정                  |
+|    ARGS     |                빌드타임 환경변수 설정                |
+|    LABEL    |                  key - value 데이터                  |
+|   ONBUILD   |    다른 빌드의 베이스로 사용될 때 사용하는 명령어    |
+
+#### .dockerignore
+
+도커 빌드 컨텍스트에서 지정된 패턴의 파일을 무시. 민감한 정보를 제외하거나 불필요한 에셋을 제외시켜 빌드 속도 개선 가능. 이미지 빌드 시 사용하는 파일은 제외시키면 안됨.
+
 # Reference
 
 - [초보를 위한 도커 안내서 - subicura](https://www.inflearn.com/course/%EB%8F%84%EC%BB%A4-%EC%9E%85%EB%AC%B8/) : 강의 수강하며 나온 내용들 정리
