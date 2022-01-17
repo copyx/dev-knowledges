@@ -17,6 +17,7 @@ docker CLI는 docker host에 명령을 전달하고 결과를 받아서 출력�
 |    `-d`     |  detached mode (백그라운드에서 독립적으로 실행)   |
 |    `-p`     |           호스트와 컨테이너의 포트 연결           |
 |    `-v`     |         호스트와 컨테이너의 디렉토리 연결         |
+|    `-w`     |           컨테이너의 워킹 디렉토리 설정           |
 |    `-e`     |       컨테이너 내에서 사용할 환경변수 설정        |
 |  `--name`   |                컨테이너 이름 설정                 |
 |   `--rm`    |        프로세스 종료 시 컨테이너 자동 제거        |
@@ -35,6 +36,8 @@ docker run -d -p 9906:3306 \
 --name mysql \
 mysql:5.7
 ```
+
+- `-v` 옵션을 이용해 디스크 공간을 할당하지 않으면, 컨테이너를 종료했을 때 데이터가 없어짐.
 
 ### `docker exec`
 
@@ -94,3 +97,73 @@ docker rm mysql --tail 10 # 마지막 10개 로그
   - 네트워크 생성 명령
 - `docker network connect`
   - 컨테이너를 네트워크에 연결하는 명령어
+
+연결 후 컨테이너 실행 시 --network 옵션에 추가
+
+```bash
+docker run -d -p 8080:80 \
+  --network=app-network \
+  -e WORDPRESS_DB_HOST=mysql \
+  -e WORDPRESS_DB_NAME=wp \
+  -e WORDPRESS_DB_USER=wp \
+  -e WORDPRESS_DB_PASSWORD=wp \
+  wordpress
+```
+
+## Docker compose
+
+여러 컨테이너로 구성된 애플리케이션을 정의하고 실행할 수 있게 해주는 도구.
+
+### docker-compose.yml 작성법
+
+```yml
+version: "3"
+# docker-compose.yml 파일의 명세 버전.
+# 지원하는 도커 엔진 버전 다름.
+services:
+  db:
+  # 실행할 컨테이너 이름 정의. docker run의 --name 옵션
+  image: mysql:5.7
+  # 컨테이너에 사용할 이미지 이름과 태그. 태그 생략 시 자동으로 latest
+  ports:
+    - "1234:3306"
+  # 컨테이너와 연결할 포트(들). docker run의 -p 옵션
+  environment:
+    - MYSQL_ROOT_PASSWORD=1234
+  # 컨테이너에서 사용할 환경 변수. docker run의 -e 옵션
+  volumes:
+    - ./app:/app
+  # 마운트 하려는 디렉터리(들). docker run의 -v 옵션
+  restart: always
+  # 재시작 정책. no, on-failure, always, unless-stopped
+  # docker run의 --restart 옵션
+  build:
+    context: .
+    dockerfile: ./Dockerfile-dev
+  # 이미지를 자체 빌드 후 사용할 때 image 속성 대신 사용
+```
+
+### 명령어
+
+```bash
+docker-compose up # docker-compose.yml 파일을 기반으로 컨테이너들 생성
+
+docker-compose down # docker-compose.yml에 정의된 컨테이너들 한 번에 중지 및 삭제
+docker-compose start # 멈춘 컨테이너를 재개
+docker-compose start db # 특정 컨테이너를 재개
+docker-compose restart # 멈춘 컨테이너를 재시작
+docker-compose restart db # 특정 컨테이너를 재시작
+docker-compose stop # 컨테이너 중지
+docker-compose stop db # 특정 컨테이너만 중지
+
+docker-compose logs # 컨테이너들 로그 한 번에 확인
+docker-compose ps # YAML 파일의 컨테이너들 상태 확인
+docker-compose exec db mysql # YAML 파일의 실행 중인 컨테이너에 명령어 실행
+docker-compose build # build로 선언된 컨테이너 빌드
+docker-compose build db # 특정 컨테이너만 컨테이너 빌드
+```
+
+# Reference
+
+- [초보를 위한 도커 안내서 - subicura](https://www.inflearn.com/course/%EB%8F%84%EC%BB%A4-%EC%9E%85%EB%AC%B8/) : 강의 수강하며 나온 내용들 정리
+- [Overview of Docker Compose - Docker Documentation](https://docs.docker.com/compose/)
