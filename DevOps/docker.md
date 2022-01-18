@@ -223,6 +223,47 @@ https://docs.docker.com/engine/reference/builder/
 
 도커 빌드 컨텍스트에서 지정된 패턴의 파일을 무시. 민감한 정보를 제외하거나 불필요한 에셋을 제외시켜 빌드 속도 개선 가능. 이미지 빌드 시 사용하는 파일은 제외시키면 안됨.
 
+#### 실습
+
+```Dockerfile
+# 1. node 설치
+FROM ubuntu:20.04
+RUN apt-get update
+RUN DEBIAN_FROMTEND=noninteractive apt-get install -y nodejs npm
+
+# 2. 소스 복사
+COPY . /usr/src/app
+
+# 3. 패키지 설치
+WORKDIR /usr/src/app
+RUN npm install
+
+# 4. 실행
+EXPOSE 3000
+CMD node app.js
+```
+
+- `DEBIAN_FROMTEND=noninteractive`는 `apt-get`, `apt` 명령어 사용 시 사용자와 상호작용을 하지 않는다는 환경변수 설정.
+
+#### 최적화
+
+1. 불필요한 설치 피하기
+   - Ubuntu 이미지에 Node 설치가 아닌, Node가 이미 설치된 기본 이미지 사용 가능.
+1. 작업의 순서
+   - 도커는 캐시를 사용해 빌드 시간을 줄임. 특정 작업에 수정이 발견되면 그 이후 모든 작업을 다시 진행.
+   - 작업의 의존성을 생각해 배치하면 변경 발생 시 빌드 시간을 줄일 수 있음.
+1. Alpine 이미지를 사용해 이미지 용량 줄이기
+   - 작고, 간단하면서, 보안성 높은 리눅스 이미지. https://alpinelinux.org/
+   - 예) node:12-alpine
+
+### Docker Hub
+
+Docker Hub에 이미지를 올려두면 docker 명령으로 언제든 이미지를 가져올 수 있음.
+
+- `docker login`
+- `docker push <id>/<image-name>`
+- `docker pull <id>/<image-name>`
+
 # Reference
 
 - [초보를 위한 도커 안내서 - subicura](https://www.inflearn.com/course/%EB%8F%84%EC%BB%A4-%EC%9E%85%EB%AC%B8/) : 강의 수강하며 나온 내용들 정리
