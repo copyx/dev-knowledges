@@ -122,25 +122,25 @@ version: "3"
 # 지원하는 도커 엔진 버전 다름.
 services:
   db:
-  # 실행할 컨테이너 이름 정의. docker run의 --name 옵션
-  image: mysql:5.7
-  # 컨테이너에 사용할 이미지 이름과 태그. 태그 생략 시 자동으로 latest
-  ports:
-    - "1234:3306"
-  # 컨테이너와 연결할 포트(들). docker run의 -p 옵션
-  environment:
-    - MYSQL_ROOT_PASSWORD=1234
-  # 컨테이너에서 사용할 환경 변수. docker run의 -e 옵션
-  volumes:
-    - ./app:/app
-  # 마운트 하려는 디렉터리(들). docker run의 -v 옵션
-  restart: always
-  # 재시작 정책. no, on-failure, always, unless-stopped
-  # docker run의 --restart 옵션
-  build:
-    context: .
-    dockerfile: ./Dockerfile-dev
-  # 이미지를 자체 빌드 후 사용할 때 image 속성 대신 사용
+    # 실행할 컨테이너 이름 정의. docker run의 --name 옵션
+    image: mysql:5.7
+    # 컨테이너에 사용할 이미지 이름과 태그. 태그 생략 시 자동으로 latest
+    ports:
+      - "1234:3306"
+    # 컨테이너와 연결할 포트(들). docker run의 -p 옵션
+    environment:
+      - MYSQL_ROOT_PASSWORD=1234
+    # 컨테이너에서 사용할 환경 변수. docker run의 -e 옵션
+    volumes:
+      - ./app:/app
+    # 마운트 하려는 디렉터리(들). docker run의 -v 옵션
+    restart: always
+    # 재시작 정책. no, on-failure, always, unless-stopped
+    # docker run의 --restart 옵션
+    build:
+      context: .
+      dockerfile: ./Dockerfile-dev
+    # 이미지를 자체 빌드 후 사용할 때 image 속성 대신 사용
 ```
 
 ### 명령어
@@ -263,6 +263,16 @@ Docker Hub에 이미지를 올려두면 docker 명령으로 언제든 이미지�
 - `docker login`
 - `docker push <id>/<image-name>`
 - `docker pull <id>/<image-name>`
+
+## 더 보기
+
+- 이미지를 만들기 위한 다양한 쉘 스크립트 & 환경변수 사용
+- CI/CD 자동 빌드, 자동 배포, Blue & Green 배포, 무중단 배포
+- 모니터링, 로그
+- 가상 네트워크
+- 보안
+- 쿠버네티스
+- 이스티오(Istio) 서비스 매시
 
 # Reference
 
