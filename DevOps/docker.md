@@ -23,6 +23,7 @@ docker CLI는 docker host에 명령을 전달하고 결과를 받아서 출력�
 |   `--rm`    |        프로세스 종료 시 컨테이너 자동 제거        |
 |    `-it`    | `--interactive` & `--tty` 터미널 입력을 위한 옵션 |
 | `--network` |                   네트워크 연결                   |
+|  `--link`   |                   컨테이너 연결                   |
 
 ```bash
 # Ubuntu 20.04 버전에서 /bin/sh 실행 후 터미널 연결. 종료 후 컨테이너 제거
@@ -110,9 +111,15 @@ docker run -d -p 8080:80 \
   wordpress
 ```
 
-## Docker compose
+## Docker Compose
 
 여러 컨테이너로 구성된 애플리케이션을 정의하고 실행할 수 있게 해주는 도구.
+
+### 사용하는 이유
+
+- 복잡한 도커 명령어 대체 가능
+- 컨테이너 연결이 편리함 (`--link` 옵션)
+- 특정 컨테이너들만 공유하는 네트워크 (`docker network`) 구성
 
 ### docker-compose.yml 작성법
 
@@ -121,8 +128,8 @@ version: "3"
 # docker-compose.yml 파일의 명세 버전.
 # 지원하는 도커 엔진 버전 다름.
 services:
-  db:
-    # 실행할 컨테이너 이름 정의. docker run의 --name 옵션
+  mysql:
+    # 실행할 컨테이너 이름 정의. docker run의 --name 옵션 && --link 옵션
     image: mysql:5.7
     # 컨테이너에 사용할 이미지 이름과 태그. 태그 생략 시 자동으로 latest
     ports:
@@ -141,27 +148,80 @@ services:
       context: .
       dockerfile: ./Dockerfile-dev
     # 이미지를 자체 빌드 후 사용할 때 image 속성 대신 사용
+  app:
+    link:
+      - mysql:db
+    # 다른 컨테이너와 연결. 요즘은 잘 사용하지 않음.
+    depends_on:
+      - mysql
+    # 컨테이너의 의존성을 추가해 실행 순서를 정할 수 있음
 ```
 
 ### 명령어
 
 ```bash
+docker-compose pull # 필요한 이미지들 다운로드
+docker-compose build # build로 선언된 컨테이너 빌드
+docker-compose build {container} # 특정 컨테이너만 컨테이너 빌드
 docker-compose up # docker-compose.yml 파일을 기반으로 컨테이너들 생성
+docker-compose up --build # 강제로 이미지 다시 빌드
+docker-compose up --force-recreate # 컨테이너를 새로 생성
 
 docker-compose down # docker-compose.yml에 정의된 컨테이너들 한 번에 중지 및 삭제
 docker-compose start # 멈춘 컨테이너를 재개
-docker-compose start db # 특정 컨테이너를 재개
+docker-compose start {container} # 특정 컨테이너를 재개
 docker-compose restart # 멈춘 컨테이너를 재시작
-docker-compose restart db # 특정 컨테이너를 재시작
+docker-compose restart {container} # 특정 컨테이너를 재시작
 docker-compose stop # 컨테이너 중지
-docker-compose stop db # 특정 컨테이너만 중지
+docker-compose stop {container} # 특정 컨테이너만 중지
 
 docker-compose logs # 컨테이너들 로그 한 번에 확인
 docker-compose ps # YAML 파일의 컨테이너들 상태 확인
-docker-compose exec db mysql # YAML 파일의 실행 중인 컨테이너에 명령어 실행
-docker-compose build # build로 선언된 컨테이너 빌드
-docker-compose build db # 특정 컨테이너만 컨테이너 빌드
+docker-compose exec {container} {command} # YAML 파일의 실행 중인 컨테이너에 명령어 실행
+docker-compose run {container} {command} # 컨테이너 하나를 더 실행할 때 사용
 ```
+
+### 네트워크
+
+docker-compose로 컨테이너들을 구성하면 기본적으로 하나의 네트워크를 생성해 컨테이너를 연결해줌. 이 때 각 컨테이너의 이름이 hostname으로 사용됨.
+
+```yaml
+version: "3"
+services:
+  db:
+    image: mongo:4
+  backend:
+    image: subicura/guestbook-backend:latest
+    environment:
+      PORT: 8080
+      GUESTBOOK_DB_ADDR: db:27017
+    restart: always
+  frontend:
+    image: subicura/guestbook-frontend:latest
+    ports:
+      - "62000:3000"
+    environment:
+      PORT: 3000
+      GUESTBOOK_API_ADDR: backend:8080
+# 위에서 사용된 db, backend가 특별히 docker-compose에서 IP로 변환해주는 것이 아닌 그 자체로 hostname임.
+```
+
+참고: [Networking in Compose](https://docs.docker.com/compose/networking/)
+
+### 컨테이너 실행 타이밍 문제와 restart 옵션
+
+예를 들어 데이터베이스 컨테이너를 실행시키면 실행 자체는 오래걸리지 않지만, 실행 후 초기화 시간이 필요함. depends_on 필드를 이용해 컨테이너의 실행 순서를 제어할 수는 있지만, 실행된 컨테이너의 준비 완료 상태까지는 파악할 수 없음. 그래서 연결이 실패하는 경우가 생김.
+
+이런 경우 restart 옵션을 이용해 컨테이너가 연결에 실패해 종료되도 다시 시작해 연결을 시도하도록 셋팅할 수 있음.
+
+|           Option           |                    Description                     |
+| :------------------------: | :------------------------------------------------: |
+|            `no`            |          자동 재시작 사용 안함. 기본값임.          |
+| `on-failure[:max-retries]` |   오류(exit status가 0이 아닐 때)일 때만 재시작    |
+|          `always`          |                    항상 재시작                     |
+|      `unless-stopped`      | 컨테이너가 중지 상태인 경우를 제외하고 항상 재시작 |
+
+참고: [Docker run reference - Restart policies](https://docs.docker.com/engine/reference/run/#restart-policies---restart)
 
 ## Image
 
