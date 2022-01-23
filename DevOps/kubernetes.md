@@ -29,6 +29,75 @@
 
 쿠버네티스를 기반으로 만들어진 플랫폼 서비스도 많고, Cloud Native에서 지원하는 많은 부분들에 쿠버네티스가 중요한 역할을 함.
 
+## 쿠버네티스 아키텍쳐
+
+### Master
+
+![쿠버네티스 아키텍쳐 - Master](images/kubernetes_master.png)
+
+#### etcd
+
+분산형 키값 저장소.
+
+- 모든 상태와 데이터 저장 (key-value 형태)
+- 분산 시스템으로 구성해 가용성과 안전성을 높임
+- TTL(Time To Live), watch 등 부가 기능 제공
+- 백업 필수!
+
+#### API Server
+
+- 상태를 바꾸거나 조회하는 모듈
+- etcd와 통신하는 유일한 모듈
+- REST API 형태로 제공
+- 권한 체크 후 적절한 권한 없을 시 요청 차단
+- 관리자 요청 및 다양한 내부 모듈과 통신
+- 수평으로 확장할 수 있도록 디자인
+
+#### Scheduler
+
+어느 노드에 여유가 있는지 확인해 컨테이너를 배치하는 역할
+
+- 새로 생성된 Pod을 감지하고 실행할 노드를 선택
+- 노드의 현재 상태와 Pod의 요구사항을 체크
+  - 노드에 라벨 부여 (예: a-zone, b-zone, gpu-enabled 등)
+
+#### Controller
+
+컨테이너의 상태를 확인하고 원하는 상태(Desired State)를 유지하는 역할
+
+- Desired State 유지
+  - Observe: 상태 체크 (Current State == Desired State)
+  - Diff: 차이점 발견 (Current State != Desired State)
+  - Act: 조치 (Current State => Desired State)
+- 논리적으로 다양한 컨트롤러 존재 (Replication, Node, Endpoint 등)
+- 복잡성을 낮추기 위해 하나의 프로세스로 실행
+
+### Node
+
+![쿠버네티스 아키텍쳐 - Node](images/kubernetes_node.png)
+
+### 쿠버네티스 흐름
+
+![팟 생성 흐름](images/pod_creation_flow.gif)
+
+#### Kubelet
+
+- 각 노드에서 실행
+- Pod을 실행/중지하고 상태를 체크
+- CRI(Container Runtime Inteface)
+  - 도커 말고도 다른 컨테이너 실행 환경이 있는데, 이를 Pod으로 감싸서 사용
+
+#### Proxy
+
+- 네트워크 프록시와 부하 분산 역할
+- 성능상의 이유로 별도의 프록시 프로그램 대신 iptables 또는 IPVS를 사용 (설정만 관리)
+
+### Addons
+
+- CNI (네트워크)
+- DNS (도메인, 서비스 디스커버리)
+- 대시보드 (시각화)
+
 ## 더 공부해볼 범위
 
 - 다양한 환경별 특징 (Bare metal, EKS, ...)
