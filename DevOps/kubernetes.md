@@ -2,20 +2,42 @@
 
 컨테이너를 쉽고 빠르게 배포/확장하고 관리를 자동화해주는 오픈소스 플랫폼.
 
-- 당시 1주에 20억개의 컨테이너를 생성하던 구글이 만듦
-- 컨테이너 배포 시스템으로 사용하던 **borg**를 기반으로 만듦
+- 당시 1주에 20억개의 컨테이너를 생성하던 구글이 만듦.
+- 컨테이너 배포 시스템으로 사용하던 **borg**를 기반으로 만듦.
+- 현재는 CNCF(Cloud Native Computing Foundation)라는 오픈소스 단체로 이관됨.
 
 > 도커를 모른다면 쿠버네티스를 완벽하게 이해할 수 없다.
+
+## Cloud Native?
+
+> 클라우드 네이티브 기술은 조직이 퍼블릭, 프라이빗, 그리고 하이브리드 클라우드와 같은 현대적이고 동적인 환경에서 확장 가능한 애플리케이션을 개발하고 실행할 수 있게 해준다. 컨테이너, 서비스 메쉬, 마이크로서비스, 불변(Immutable) 인프라, 그리고 선언형(Declarative) API가 이러한 접근 방식의 예시들이다.
+>
+> 이 기술은 회복성, 관리 편의성, 가시성을 갖춘 느슨하게 결합된 시스템을 가능하게 한다. 견고한 자동화 기능을 함께 사용하면, 엔지니어는 영향이 큰 변경을 최소한의 노력으로 자주, 예측 가능하게 수행할 수 있다.
+>
+> Cloud Native Computing Foundation은 벤더 중립적인 오픈 소스 프로젝트 생태계를 육성하고 유지함으로써 해당 패러다임 채택을 촉진한다. 우리 재단은 최신 기술 수준의 패턴을 대중화하여 이런 혁신을 누구나 접근 가능하도록 한다.
+>
+> From [Cloud Native Definition v1.0](https://github.com/cncf/toc/blob/main/DEFINITION.md#%ED%95%9C%EA%B5%AD%EC%96%B4)
 
 ## [Container Orchestration](container-orchestration.md)
 
 ## 왜 Kubernetes인가?
 
-- 오픈소스
-- 엄청난 인기
+- 오픈소스: 큰 회사들도 많이 참여하고 커뮤니티가 엄청 발달함.
+- 엄청난 인기: 해외는 물론 국내 큰 회사들도 많이 사용함.
 - 무한한 확장성
 - 사실상의 표준(de facto)
 
+쿠버네티스를 기반으로 만들어진 플랫폼 서비스도 많고, Cloud Native에서 지원하는 많은 부분들에 쿠버네티스가 중요한 역할을 함.
+
+## 더 공부해볼 범위
+
+- 다양한 환경별 특징 (Bare metal, EKS, ...)
+- 쿠버네티스 패턴 (사이드카, 어댑터, ...)
+- 관련 생태계 (서비스메시, 서버리스, ...)
+- GitOps CI/CD
+- 승인제어 등 고급 기능
+
 ## 참고자료 및 이미지 출처
 
-[초보를 위한 쿠버네티스 안내서 - 44BITS](https://youtube.com/playlist?list=PLIUCBpK1dpsNf1m-2kiosmfn2nXfljQgb)
+- [초보를 위한 쿠버네티스 안내서 - 44BITS](https://youtube.com/playlist?list=PLIUCBpK1dpsNf1m-2kiosmfn2nXfljQgb)
+- [초보를 위한 쿠버네티스 안내서 - 인프런](https://www.inflearn.com/course/%EC%BF%A0%EB%B2%84%EB%84%A4%ED%8B%B0%EC%8A%A4-%EC%9E%85%EB%AC%B8)
