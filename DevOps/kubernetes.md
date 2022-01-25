@@ -98,6 +98,83 @@
 - DNS (도메인, 서비스 디스커버리)
 - 대시보드 (시각화)
 
+## Objects
+
+### Workload
+
+쿠버네티스에서 구동되는 애플리케이션
+
+#### Pod
+
+- 가장 작은 배포 단위
+- 전체 클러스터에서 고유한 IP 할당
+- 여러 컨테이너가 하나의 팟에 속할 수 있음
+  - 호스트 디렉토리나 로컬호스트 네트워크를 공유할 수 있음
+
+[워크로드 라이프사이클](https://kubernetes.io/ko/docs/concepts/workloads/pods/pod-lifecycle/)
+
+#### ReplicaSet
+
+- 여러개의 팟을 관리
+  - 신규 팟을 생성하거나, 기존 팟을 제거해 원하는 수(Replicas)를 유지
+
+#### Deployment
+
+- 내부적으로 ReplicaSet을 이용해 배포 버전을 관리
+
+![Deployment](images/kubernetes_deployment.gif)
+
+### 그 외 다양한 Workload
+
+https://kubernetes.io/ko/docs/concepts/workloads/controllers/
+
+- Daemon Set
+  - 모든 노드에 꼭 하나씩만 떠있길 원하는 팟을 만들 때 사용
+  - 예) 데이터, 로그 수집
+- Stateful Set
+  - 순차적인 팟 실행, 볼륨 재활용 등에 사용
+- Job / CronJob
+  - 한 번 실행하고 죽는 팟
+  - CronJob은 Job을 [Cron](https://ko.wikipedia.org/wiki/Cron) 형식으로 쓰여진 주어진 일정에 따라 주기적으로 반복
+
+### Service, LoadBalancer, Network
+
+https://kubernetes.io/ko/docs/concepts/services-networking/
+
+![Common Set](images/kubernetes_common_set.png)
+
+#### Service - ClusterIP
+
+- 클러스터 내부에서 사용하는 프록시
+- 팟은 동적이지만 서비스는 고유 IP를 가짐
+- 클러스터 내부에서 서비스 연결은 DNS를 이용
+
+#### Service - NodePort
+
+- 노드(host)에 노출되어 외부에서 접근 가능한 서비스
+
+#### Service - LoadBalancer
+
+- 하나의 IP주소를 외부에 노출
+
+#### Ingress
+
+- 도메인 또는 경로별 라우팅
+
+### 그 외 기본 오브젝트
+
+- Volume: Storage (EBS, NFS, ...)
+- Namespace: 논리적인 리소스 구분
+- ConfigMap/Secret: 설정
+- ServiceAccount: 권한 계정
+- Role/ClusterRole: 권한 설정(get, list, watch, create, ...)
+
+## API 호출
+
+원하는 상태(desiged state)를 다양한 오브젝트(object)로 명세(spec)를 작성해 API 서버에 YAML 형식으로 전달
+
+![ReplicaSet Creation Flow](images/kubernetes_replicaset_creation_flow.png)
+
 ## 더 공부해볼 범위
 
 - 다양한 환경별 특징 (Bare metal, EKS, ...)
