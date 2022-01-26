@@ -169,11 +169,18 @@ https://kubernetes.io/ko/docs/concepts/services-networking/
 - ServiceAccount: 권한 계정
 - Role/ClusterRole: 권한 설정(get, list, watch, create, ...)
 
-## API 호출
+### API 호출
 
 원하는 상태(desiged state)를 다양한 오브젝트(object)로 명세(spec)를 작성해 API 서버에 YAML 형식으로 전달
 
 ![ReplicaSet Creation Flow](images/kubernetes_replicaset_creation_flow.png)
+
+## 실습 환경
+
+https://subicura.com/k8s/prepare/kubernetes-setup.html
+
+- minikube or k3s
+- kubectl
 
 ## 더 공부해볼 범위
 
@@ -187,3 +194,5 @@ https://kubernetes.io/ko/docs/concepts/services-networking/
 
 - [초보를 위한 쿠버네티스 안내서 - 44BITS](https://youtube.com/playlist?list=PLIUCBpK1dpsNf1m-2kiosmfn2nXfljQgb)
 - [초보를 위한 쿠버네티스 안내서 - 인프런](https://www.inflearn.com/course/%EC%BF%A0%EB%B2%84%EB%84%A4%ED%8B%B0%EC%8A%A4-%EC%9E%85%EB%AC%B8)
+- [쿠버네티스 안내서](https://subicura.com/k8s/)
+- [쿠버네티스 문서](https://kubernetes.io/ko/docs/home/)
