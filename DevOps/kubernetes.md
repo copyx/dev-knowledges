@@ -182,6 +182,98 @@ https://subicura.com/k8s/prepare/kubernetes-setup.html
 - minikube or k3s
 - kubectl
 
+### [minikube](https://minikube.sigs.k8s.io/docs/)
+
+minikube는 VM, Container, Bare-metal에 모두 배포할 수 있지만, 서로 다른 환경들과 상호작용하기 위한 일관된 방법을 제공하기 위해 [Docker Machine](https://github.com/docker/machine) 라이브러리를 사용함.
+
+docker 드라이버를 사용한다면 쿠버네티스 네트워크에 접근할 때 별도의 포트를 프록시하여 사용해야함.
+
+```bash
+# 로컬 클러스터의 서비스에 접근하기 위한 URL을 반환하는 명령
+minikube service [service-name]
+```
+
+## `kubectl` Commands
+
+### `apply`
+
+쿠버네티스 클러스터에 설정을 적용시키는 명령
+
+```bash
+kubectl apply -f [yaml/file/path.yml]
+```
+
+### `get`
+
+리소스들을 조회하는 명령
+
+```bash
+kubectl get all
+kubectl get pod
+kubectl get po, service
+
+# 결과 포맷 변경
+kubectl get pod -o wide
+kubectl get pod -o yaml
+kubectl get pod -o json
+
+# 레이블 표시
+kubectl get pod --show-labels
+```
+
+### `describe`
+
+쿠버네티스에 선언된 리소스의 상세한 상태를 확인하는 명령
+
+```bash
+kubectl describe [type]/[name]
+kubectl describe po/wordpress-5cf6c98486-twmrc
+```
+
+여기서 Events 항목을 확인할 수 있는데, 해당 팟에게 발생한 일들을 확인할 수 있음. 이를 통해 원하는 대로 팟이 안뜨거나 할 때 원인 분석 가능.
+
+### `delete`
+
+쿠버네티스에 선언된 리소스를 삭제하는 명령
+
+```bash
+kubectl delete [type]/[name]
+kubectl delete po/wordpress-5cf6c98486-twmrc
+```
+
+### `logs`
+
+팟, 컨테이너의 로그를 확인하는 명령
+
+```bash
+kubectl logs [pod-name]
+# 특정 컨테이너의 로그
+kubectl logs [pod-name] -c [container-name]
+```
+
+### `exec`
+
+컨테이너에 명령을 실행하는 명령
+
+```bash
+kubectl exec [-it] [pod-name] -- [command]
+kubectl exec -it wordpress-5cf6c98486-twmrc -- bash
+```
+
+### `config`
+
+여러 개의 쿠버네티스 클러스터 컨텍스트를 저장하고 필요에 따라 선택 가능.
+
+```bash
+kubectl config current-context
+kubectl config use-context minikube
+```
+
+### 그 외
+
+- `api-resources` : 서버에서 지원하고 있는 API 리소스들을 나열. 여기서 리소스들의 shortname 확인 가능.
+- `explain` : 특정 오브젝트 설명 보기
+
 ## 더 공부해볼 범위
 
 - 다양한 환경별 특징 (Bare metal, EKS, ...)
