@@ -31,7 +31,17 @@
 
 ## 쿠버네티스 아키텍쳐
 
-### Master
+쿠버네티스를 배포하면 클러스터를 얻음.
+
+클러스터는 노드의 집합. 노드는 컨테이너화된 애플리케이션을 실행하는 워커 머신의 집합. 모든 클러스터는 최소 한 개의 노드를 가짐.
+
+노드는 팟을 호스트함. 컨트롤 플레인은 노드와 팟을 관리. 프로덕션 환경에서는 일반적으로 컨트롤 플레인이 여러 컴퓨터에 걸쳐 실행되고, 클러스터는 일반적으로 여러 노드를 실행.
+
+![쿠버네티스 컴포넌트](images/components-of-kubernetes.svg)
+
+출처: https://kubernetes.io/ko/docs/concepts/overview/components/
+
+### Master(Control Plane)
 
 ![쿠버네티스 아키텍쳐 - Master](images/kubernetes_master.png)
 
@@ -44,7 +54,9 @@
 - TTL(Time To Live), watch 등 부가 기능 제공
 - 백업 필수!
 
-#### API Server
+#### API Server(kube-apiserver)
+
+쿠버네티스 API를 노출하는 컴포넌트. 컨트롤 플레인의 프론트엔드.
 
 - 상태를 바꾸거나 조회하는 모듈
 - etcd와 통신하는 유일한 모듈
@@ -53,15 +65,17 @@
 - 관리자 요청 및 다양한 내부 모듈과 통신
 - 수평으로 확장할 수 있도록 디자인
 
-#### Scheduler
+#### Scheduler(kube-scheduler)
 
-어느 노드에 여유가 있는지 확인해 컨테이너를 배치하는 역할
+어느 노드에 여유가 있는지 확인해 컨테이너를 배치하는 컴포넌트.
 
 - 새로 생성된 Pod을 감지하고 실행할 노드를 선택
 - 노드의 현재 상태와 Pod의 요구사항을 체크
   - 노드에 라벨 부여 (예: a-zone, b-zone, gpu-enabled 등)
 
 #### Controller
+
+kube-contoller-manager 컴포넌트에 의해 실행되는 프로세스.
 
 컨테이너의 상태를 확인하고 원하는 상태(Desired State)를 유지하는 역할
 
@@ -76,21 +90,25 @@
 
 ![쿠버네티스 아키텍쳐 - Node](images/kubernetes_node.png)
 
-### 쿠버네티스 흐름
-
-![팟 생성 흐름](images/pod_creation_flow.gif)
-
 #### Kubelet
+
+팟에서 컨테이너가 확실하게 동작하도록 관리하는 컴포넌트
 
 - 각 노드에서 실행
 - Pod을 실행/중지하고 상태를 체크
 - CRI(Container Runtime Inteface)
   - 도커 말고도 다른 컨테이너 실행 환경이 있는데, 이를 Pod으로 감싸서 사용
 
-#### Proxy
+#### Proxy(kube-proxy)
+
+각 노드에서 실행되는 네트워크 프로시로 노드의 네트워크 규직을 관리하는 컴포넌트. 쿠버네티스의 서비스 개념의 구현부.
 
 - 네트워크 프록시와 부하 분산 역할
 - 성능상의 이유로 별도의 프록시 프로그램 대신 iptables 또는 IPVS를 사용 (설정만 관리)
+
+### 쿠버네티스 흐름
+
+![팟 생성 흐름](images/pod_creation_flow.gif)
 
 ### Addons
 
@@ -100,31 +118,152 @@
 
 ## Objects
 
-### Workload
+쿠버네티스 시스템 안에서 클러스터의 상태를 표현하기위해 사용되는 영속적인 엔터티. 이 엔터티들이 다음을 서술할 수 있음
 
-쿠버네티스에서 구동되는 애플리케이션
+- 어떤 컨테이너화 된 애플리케이션들이 어느 노드에서 실행되고 있는지
+- 이 애플리케이션들이 사용 가능한 리소스들
+- 재시작, 업그레이드, 장애 허용같이 이 애플리케이션들이 어떻게 동작해야할지에 대한 정책들
 
-#### Pod
+## Workloads
+
+쿠버네티스에서 구동되는 애플리케이션. 워크로드가 하나의 컴포넌트든 여러 컴포넌트가 함께하든, 쿠버네티스에서는 애플리케이션을 팟 집합 내에서 실행함.
+
+각각의 팟을 직접 관리하는 대신 워크로드 리소스 사용 가능.
+
+## Pod
 
 - 가장 작은 배포 단위
 - 전체 클러스터에서 고유한 IP 할당
 - 여러 컨테이너가 하나의 팟에 속할 수 있음
   - 호스트 디렉토리나 로컬호스트 네트워크를 공유할 수 있음
 
-[워크로드 라이프사이클](https://kubernetes.io/ko/docs/concepts/workloads/pods/pod-lifecycle/)
+![Pod 생성 과정](images/kubernetes_pod_creation_sequence.svg)
+이미지 출처: [Pod 생성 분석 | 쿠버네티스 안내서](https://subicura.com/k8s/guide/pod.html#pod-%E1%84%89%E1%85%A2%E1%86%BC%E1%84%89%E1%85%A5%E1%86%BC-%E1%84%87%E1%85%AE%E1%86%AB%E1%84%89%E1%85%A5%E1%86%A8)
 
-#### ReplicaSet
+`kubectl run` 명령을 이용해 팟을 생성하기도 하지만, 대부분 YAML 파일로 많이 만듦.
+
+### [Pod 라이프사이클](https://kubernetes.io/ko/docs/concepts/workloads/pods/pod-lifecycle/)
+
+### 컨테이너 상태 모니터링
+
+`컨테이너 생성`과 `서비스 준비`는 서로 다른 상태. 컨테이너를 생성했다해도 워크로드가 모두 준비되서 동작 가능할 때까지는 초기화 시간이 필요함. 쿠버네티스는 이 `서비스 준비` 상태를 체크하는 옵션을 제공.
+
+- 보통 livenessProbe와 readinessProbe를 같이 적용함. 상세한 설정은 애플리케이션 환경에 따라 적절히 조절.
+
+#### livenessProbe
+
+컨테이너가 정상적으로 동작하는지 체크하고 정상적으로 동작하지 않는다면 컨테이너를 재시작하여 문제를 해결.
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: echo-lp
+  labels:
+    app: echo
+spec:
+  containers:
+    - name: app
+      image: ghcr.io/subicura/echo:v1
+      livenessProbe: # HTTP GET 요청을 보내 생존 여부 체크
+        httpGet:
+          path: /does/not/exist
+          port: 8080
+        initialDelaySeconds: 5
+        timeoutSeconds: 2 # Default 1
+        periodSeconds: 5 # Defaults 10
+        failureThreshold: 1 # Defaults 3
+
+# NAME      READY   STATUS             RESTARTS      AGE
+# echo-lp   0/1     CrashLoopBackOff   4 (24s ago)   69s
+
+# Events:
+#   Type     Reason     Age                From               Message
+#   ----     ------     ----               ----               -------
+#   Normal   Scheduled  96s                default-scheduler  Successfully assigned default/echo-lp to minikube
+#   Warning  BackOff    76s (x2 over 76s)  kubelet            Back-off restarting failed container
+#   Normal   Pulled     56s (x5 over 95s)  kubelet            Container image "ghcr.io/subicura/echo:v1" already present on machine
+#   Normal   Created    56s (x5 over 95s)  kubelet            Created container app
+#   Normal   Started    56s (x5 over 95s)  kubelet            Started container app
+#   Warning  Unhealthy  56s (x4 over 86s)  kubelet            Liveness probe failed: Get "http://172.17.0.3:8080/does/not/exist": dial tcp 172.17.0.3:8080: connect: connection refused
+#   Normal   Killing    56s (x4 over 86s)  kubelet            Container app failed liveness probe, will be restarted
+```
+
+#### readinessProbe
+
+컨테이너 준비 여부 체크 후 준비되지 않으면 팟으로 들어오는 요청을 제외. livenessProbe는 재시작하지만 readinessProbe는 요청만 제외시킴.
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: echo-rp
+  labels:
+    app: echo
+spec:
+  containers:
+    - name: app
+      image: ghcr.io/subicura/echo:v1
+      readinessProbe: # HTTP GET 요청을 보내 생존 여부 체크
+        httpGet:
+          path: /does/not/exist
+          port: 8080
+        initialDelaySeconds: 5
+        timeoutSeconds: 2 # Default 1
+        periodSeconds: 5 # Defaults 10
+        failureThreshold: 1 # Defaults 3
+
+# NAME      READY   STATUS    RESTARTS   AGE
+# echo-rp   0/1     Running   0          8s
+
+# Events:
+#   Type     Reason     Age               From               Message
+#   ----     ------     ----              ----               -------
+#   Normal   Scheduled  27s               default-scheduler  Successfully assigned default/echo-lp to minikube
+#   Normal   Pulled     26s               kubelet            Container image "ghcr.io/subicura/echo:v1" already present on machine
+#   Normal   Created    26s               kubelet            Created container app
+#   Normal   Started    26s               kubelet            Started container app
+#   Warning  Unhealthy  2s (x4 over 17s)  kubelet            Readiness probe failed: Get "http://172.17.0.3:8080/does/not/exist": dial tcp 172.17.0.3:8080: connect: connection refused
+```
+
+### 다중 컨테이너
+
+하나의 팟에 속한 컨테이너는 네트워크를 localhost로 공유하고, 디렉토리 또한 공유할 수 있음.
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: counter
+  labels:
+    app: counter
+spec:
+  containers:
+    - name: app
+      image: ghcr.io/subicura/counter:latest
+      env:
+        - name: REDIS_HOST
+          value: "localhost"
+    - name: db
+      image: redis
+```
+
+## Workload Resources
+
+사용자를 대신해 팟 집합을 관리하는 리소스. 컨트롤러(지정한 상태와 일치하도록 올바른 수와 유형의 팟이 실행되고 있는지 확인)를 구성.
+
+### ReplicaSet
 
 - 여러개의 팟을 관리
   - 신규 팟을 생성하거나, 기존 팟을 제거해 원하는 수(Replicas)를 유지
 
-#### Deployment
+### Deployment
 
 - 내부적으로 ReplicaSet을 이용해 배포 버전을 관리
 
 ![Deployment](images/kubernetes_deployment.gif)
 
-### 그 외 다양한 Workload
+### 그 외
 
 https://kubernetes.io/ko/docs/concepts/workloads/controllers/
 
@@ -269,10 +408,33 @@ kubectl config current-context
 kubectl config use-context minikube
 ```
 
+### `run`
+
+`docker run` 명령처럼 이미지를 기반으로 팟을 생성시키는 명령
+
+```bash
+kubecel run [pod-name] --image=[image-path]
+```
+
+`--env`, `-it` 등 `docker run`과 비슷한 다양한 옵션 사용 가능.
+
+하지만 대부분 `run` 명령보다 YAML 파일을 더 많이 사용함.
+
 ### 그 외
 
 - `api-resources` : 서버에서 지원하고 있는 API 리소스들을 나열. 여기서 리소스들의 shortname 확인 가능.
 - `explain` : 특정 오브젝트 설명 보기
+
+## [YAML](yaml.md)
+
+쿠버네티스의 YAML 파일에는 다음 4가지 필수요소가 있음.
+
+|    Field     |                  Description                  |                Examples                 |
+| :----------: | :-------------------------------------------: | :-------------------------------------: |
+| `apiVersion` | 이 오브젝트를 생성하기 위해 사용하는 API 버전 |  v1, app/v1, networking.k8s.io/v1, ...  |
+|    `kind`    |         생성하고자 하는 오브젝트 종류         | Pod, ReplicaSet, Deployment, Service 등 |
+|  `metadata`  |     오브젝트를 유일하게 구분지어줄 데이터     |         name, uid, namespace 등         |
+|    `spec`    |    오브젝트에 대해 어떤 상태를 의도하는지     |         오브젝트 종류마다 다름          |
 
 ## 더 공부해볼 범위
 
