@@ -256,12 +256,97 @@ spec:
 
 - 여러개의 팟을 관리
   - 신규 팟을 생성하거나, 기존 팟을 제거해 원하는 수(Replicas)를 유지
+  - 레이블을 이용해 팟을 체크함. 레이블이 겹치지 않게 신경써야함.
+- 다만 실전에서 ReplicaSet이 단독으로 사용되는 일은 거의 없음. ReplicaSet을 관리하는 Deployment를 주로 사용함.
+
+```yaml
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: echo-rs
+spec:
+  replicas: 1 # 몇 개의 팟을 유지할건지
+  selector: # 관리 대상인 팟을 무엇으로 구분할지
+    matchLabels:
+      app: echo
+      tier: app
+  template:
+    metadata:
+      labels:
+        app: echo
+        tier: app
+    spec:
+      containers:
+        - name: echo
+          image: ghcr.io/subicura/echo:v1
+# NAME                READY   STATUS    RESTARTS   AGE     LABELS
+# pod/echo-rs-pw2ll   1/1     Running   0          3m41s   app=echo,tier=app
+#
+# NAME                      DESIRED   CURRENT   READY   AGE     LABELS
+# replicaset.apps/echo-rs   1         1         1       3m41s   <none>
+```
 
 ### Deployment
 
 - 내부적으로 ReplicaSet을 이용해 배포 버전을 관리
 
 ![Deployment](images/kubernetes_deployment.gif)
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: echo-deploy
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: echo
+      tier: app
+  template:
+    metadata:
+      labels:
+        app: echo
+        tier: app
+    spec:
+      containers:
+        - name: echo
+          image: ghcr.io/subicura/echo:v1
+# NAME                               READY   STATUS    RESTARTS   AGE
+# pod/echo-deploy-77dbb94b69-ft5p2   1/1     Running   0          71s
+# pod/echo-deploy-77dbb94b69-fvjnq   1/1     Running   0          71s
+# pod/echo-deploy-77dbb94b69-kt8jz   1/1     Running   0          71s
+# pod/echo-deploy-77dbb94b69-nplhl   1/1     Running   0          71s
+#
+# NAME                          READY   UP-TO-DATE   AVAILABLE   AGE
+# deployment.apps/echo-deploy   4/4     4            4           71s
+#
+# NAME                                     DESIRED   CURRENT   READY   AGE
+# replicaset.apps/echo-deploy-77dbb94b69   4         4         4       71s
+
+# 이미지 태그를 v2로 변경하고 재배포한 결과
+# NAME                               READY   STATUS    RESTARTS   AGE
+# pod/echo-deploy-665857f7dd-48fwd   1/1     Running   0          10s
+# pod/echo-deploy-665857f7dd-6jmjd   1/1     Running   0          10s
+# pod/echo-deploy-665857f7dd-7dmpx   1/1     Running   0          4s
+# pod/echo-deploy-665857f7dd-r9bwr   1/1     Running   0          5s
+#
+# NAME                          READY   UP-TO-DATE   AVAILABLE   AGE
+# deployment.apps/echo-deploy   4/4     4            4           92s
+#
+# NAME                                     DESIRED   CURRENT   READY   AGE
+# replicaset.apps/echo-deploy-665857f7dd   4         4         4       10s
+# replicaset.apps/echo-deploy-77dbb94b69   0         0         0       92s
+```
+
+`kubectl rollout` 명령을 이용해 히스토리를 확인할 수 있고, 손쉽게 롤백할 수 있음.
+
+```bash
+kubectl rollout history deployment/echo-deploy
+kubectl rollout history deployment/echo-deploy --revision
+kubectl rollout undo deployment/echo-deploy
+kubectl rollout undo deployment/echo-deploy --to-revision=2
+```
 
 ### 그 외
 
@@ -278,19 +363,59 @@ https://kubernetes.io/ko/docs/concepts/workloads/controllers/
 
 ### Service, LoadBalancer, Network
 
+> 쿠버네티스에서 서비스는 팟의 논리적 집합과 그것들에 접근할 수 있는 정책을 정의하는 추상적 개념이다.
+>
+> From [서비스 | Kubernetes](https://kubernetes.io/ko/docs/concepts/services-networking/service/)
+
+팟은 자체 IP를 가짐. 그래서 팟끼리 직접 통신할 수 있지만, 쉽게 생성되고 사라지는 특성 때문에 이는 위험함. 이를 해결하기 위해 고정된 IP를 가진 서비스를 두고 이를 통해 통신.
+
+서비스가 대상으로 하는 팟 집합은 일반적으로 셀렉터가 결정.
+
+팟의 노출 범위에 따라 ClusterIP, NodePort, LoadBalancer로 나뉨.
+
 https://kubernetes.io/ko/docs/concepts/services-networking/
 
 ![Common Set](images/kubernetes_common_set.png)
+
+서비스의 레이블 이름은 [RFC 1035](https://kubernetes.io/ko/docs/concepts/overview/working-with-objects/names/#rfc-1035-label-names)에 정의된 DNS 레이블 표준을 따라야함.
 
 #### Service - ClusterIP
 
 - 클러스터 내부에서 사용하는 프록시
 - 팟은 동적이지만 서비스는 고유 IP를 가짐
 - 클러스터 내부에서 서비스 연결은 DNS를 이용
+  - 서비스의 이름이 내부 DNS에 등록되서 이를 도메인으로 접근이 가능해짐
+
+|          Field          |                   Description                    |
+| :---------------------: | :----------------------------------------------: |
+|    `spec.ports.port`    |               서비스가 오픈할 포트               |
+| `spec.ports.targetPort` | 서비스가 접근할 팟의 포트 (기본값은 port와 동일) |
+|     `spec.selector`     |        서비스가 접근할 팟의 레이블 선택자        |
+
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis
+spec:
+  ports:
+    - port: 6379
+      protocol: TCP
+  selector:
+    app: counter
+    tier: db
+```
+
+![Service creation flow](images/kubernetes_service_creation_flow.svg)
 
 #### Service - NodePort
 
 - 노드(host)에 노출되어 외부에서 접근 가능한 서비스
+  - 클러스터의 모든 노드에 포트를 오픈
+  - 여러 개의 노드가 있다면 아무 노드로 접근해도 지정한 팟으로 접근
+- NodePort는 ClusterIP의 기능을 포함함.
+
+![Multi-NodePort](images/kubernetes_nodeport-multi.png)
 
 #### Service - LoadBalancer
 
