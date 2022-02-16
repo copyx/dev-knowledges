@@ -439,10 +439,49 @@ spec:
 - Azure Disk
 - GCE Persistent Disk
 
+#### ConfigMap
+
+기밀이 아닌 데이터를 저장하는데 사용하는 API 오브젝트.
+
+- 키-값 쌍으로 구성됨.
+- 최대 1MiB 크기의 데이터 저장 가능.
+- `spec` 대신 `data`(UTF-8), `binaryData`(Base64) 필드가 있음.
+- 다양한 방식으로 팟에서 활용 가능
+  - 컨테이너 커맨드와 인수
+  - 컨테이너에 대한 환경변수
+  - 읽기 전용 볼륨에 파일 추가
+  - 쿠버네티스 API를 이용해 컨피그맵 읽는 코드 팟에서 실행
+
+```yml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: alpine
+spec:
+  containers:
+    - name: alpine
+      image: alpine:latest
+      command: ["sleep"]
+      args: ["100000"]
+      volumeMounts:
+        - name: config-vol
+          mountPath: /etc/config
+      env:
+        - name: hello
+          valueFrom:
+            configMapKeyRef:
+              name: config-map-config
+              key: hello
+  volumes:
+    - name: config-vol
+      configMap:
+        name: alpine-config
+```
+
 ### 그 외 기본 오브젝트
 
 - Namespace: 논리적인 리소스 구분
-- ConfigMap/Secret: 설정
+- Secret: 설정
 - ServiceAccount: 권한 계정
 - Role/ClusterRole: 권한 설정(get, list, watch, create, ...)
 
