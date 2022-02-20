@@ -361,7 +361,7 @@ https://kubernetes.io/ko/docs/concepts/workloads/controllers/
   - 한 번 실행하고 죽는 팟
   - CronJob은 Job을 [Cron](https://ko.wikipedia.org/wiki/Cron) 형식으로 쓰여진 주어진 일정에 따라 주기적으로 반복
 
-### Service, LoadBalancer, Network
+## Service, LoadBalancer, Network
 
 > 쿠버네티스에서 서비스는 팟의 논리적 집합과 그것들에 접근할 수 있는 정책을 정의하는 추상적 개념이다.
 >
@@ -379,7 +379,7 @@ https://kubernetes.io/ko/docs/concepts/services-networking/
 
 서비스의 레이블 이름은 [RFC 1035](https://kubernetes.io/ko/docs/concepts/overview/working-with-objects/names/#rfc-1035-label-names)에 정의된 DNS 레이블 표준을 따라야함.
 
-#### Service - ClusterIP
+### Service - ClusterIP
 
 - 클러스터 내부에서 사용하는 프록시
 - 팟은 동적이지만 서비스는 고유 IP를 가짐
@@ -408,7 +408,7 @@ spec:
 
 ![Service creation flow](images/kubernetes_service_creation_flow.svg)
 
-#### Service - NodePort
+### Service - NodePort
 
 - 노드(host)에 노출되어 외부에서 접근 가능한 서비스
   - 클러스터의 모든 노드에 포트를 오픈
@@ -418,20 +418,20 @@ spec:
 
 ![Multi-NodePort](images/kubernetes_nodeport-multi.png)
 
-#### Service - LoadBalancer
+### Service - LoadBalancer
 
 - 하나의 IP주소를 외부에 노출
 - 로드밸런서에 요청하면 알아서 살아있는 노드에 접근함.
 
 **현재와 같은 구조라면 앱이 추가될 때마다 로드밸런서를 추가해야함.** 이를 해결하기 위해 Ingress를 사용함.
 
-#### Ingress
+### Ingress
 
 클러스터의 애플리케이션이 늘어날 때마다 해당 애플리케이션의 포트를 위한 서비스도 늘어나야함. 이를 편하게 하기위해 인그레스가 나옴.
 
 - 같은 IP와 Port로 접근해도 도메인 또는 경로별 라우팅
 
-#### Volume
+## [Volume](https://kubernetes.io/ko/docs/concepts/storage/volumes/)
 
 데이터를 영속성을 가진 별도의 저장소에 저장하지 않으면 팟이 제거됐을 때 사라짐. 쿠버네티스의 볼륨이 컨테이너의 디렉토리를 외부 저장소와 연결해줌. 그리고 다양한 플러그인 통해 흔히 사용하는 대부분의 스토리지를 별도 설정없이 사용할 수 있음.
 
@@ -439,7 +439,7 @@ spec:
 - Azure Disk
 - GCE Persistent Disk
 
-#### ConfigMap
+## [ConfigMap](https://kubernetes.io/ko/docs/concepts/configuration/configmap/)
 
 기밀이 아닌 데이터를 저장하는데 사용하는 API 오브젝트.
 
@@ -478,7 +478,13 @@ spec:
         name: alpine-config
 ```
 
-### 그 외 기본 오브젝트
+## Secret
+
+암호, 토큰, 키 같은 중요 데이터를 보관하는 오브젝트. 중요 데이터를 코드나 팟 스펙, 컨테이너 이미지 등에 포함시키지 않고 분리하기 위해 사용.
+
+**단, 암호화되지 않은 상태로 etcd에 저장됨.(Base64로 인코딩 되는 것 외에는 없음) 암호화를 적용하려면 외부솔루션(예: vault) 적용 필요**
+
+## 그 외 기본 오브젝트
 
 - Namespace: 논리적인 리소스 구분
 - Secret: 설정
