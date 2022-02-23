@@ -18,8 +18,26 @@ React를 기반으로 하는 iOS, Andrdoid 크로스플랫폼 애플리케이션
 
 - 참조: https://reactnative.dev/docs/render-pipeline
 
+## Rules
+
+### Use View component instead of div element
+
+RN에서는 div 사용 불가. 대신 View 컴포넌트를 사용하면 됨.
+
+### All texts have to be with Text component
+
+RN에서 사용할 모든 텍스트는 Text component로 감싸서 사용해야 함.
+
+### StyleSheet is not CSS
+
+RN에서 사용할 수 있는 스타일 속성은 CSS와 다름. 편하게 자동완성을 사용하려면 `StyleSheet.create({})` 추천!
+
 ## Tools
 
 ### [Expo](https://expo.dev/)
 
 모든 리액트 앱(리액트 네이티브 포함)을 위한 프레임워크이자 플랫폼. 동일한 자바스크립트 혹은 타입스크립트 코드로 iOS, Android, Web 앱의 개발, 빌드, 배포 사이클을 빠르게 반복할 수 있도록 도와주는 리액트 네이티브와 네이티브 플랫폼들에 기반한 도구와 서비스들의 집합.
+
+#### [Snack](https://snack.expo.dev/)
+
+React Native를 웹 브라우저에서 개발할 수 있는 코드 에디터.
