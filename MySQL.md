@@ -193,13 +193,13 @@ WHERE condition_expr;
 
 [DELETE Statement - MySQL](https://dev.mysql.com/doc/refman/8.0/en/delete.html)
 
-# OPERATOR
+## OPERATOR
 
 ## BETWEEN A AND B
 
 A와 B를 포함한 범위에 속하는지 판별
 
-# EXPLAIN
+## EXPLAIN
 
 쿼리의 실행 계획을 알고 싶을 때 사용하는 명령어. 쿼리의 앞에 붙여주면 됨.
 
@@ -217,9 +217,9 @@ SELECT column[, column]
 FROM table
 ```
 
-# Data Type
+## Data Type
 
-## Enum
+### Enum
 
 Enum은 String 타입의 일종. 테이블 생성 시 컬럼 명세에 명시적으로 나열된 값들만 허용하는 문자열 객체.
 
@@ -234,6 +234,52 @@ SELECT DATE_ADD(lesson_at, INTERVAL duration HOUR_MINUTE) # 이 경우 문자열
 DATE_ADD(lesson_at, INTERVAL CAST(duration AS CHAR) MINUTE)
 ```
 
-# 참고자료
+## Backup & Restore
+
+MySQL은 mysqldump라는 도구를 이용해 스키마와 데이터를 백업하고 복구할 수 있음.
+
+```bash
+# Backup
+mysqldump db-name > dump.sql
+# Restore
+mysqldump db-name < dump.sql
+mysql db-name < dump.sql
+```
+
+### Trouble Shooting
+
+#### COLUMN_STATISTICS 테이블을 찾을 수 없음
+
+```bash
+mysqldump: Couldn't execute 'SELECT COLUMN_NAME,
+JSON_EXTRACT(HISTOGRAM, '$."number-of-buckets-specified"')
+FROM information_schema.COLUMN_STATISTICS
+WHERE SCHEMA_NAME = 'temo' AND TABLE_NAME = 'coupon';'
+: Unknown table 'COLUMN_STATISTICS' in information_schema (1109)
+```
+
+[COLUMN_STATISTICS](https://dev.mysql.com/doc/refman/8.0/en/information-schema-column-statistics-table.html)는 컬럼 값에 대한 히스토그램 통계에 대한 접근을 제공하는 테이블. `--column-statistics=0` 옵션으로 통계를 비활성화 가능.
+
+```bash
+mysqldump db-name --column-statistics=0 > dump.sql
+```
+
+#### ERROR 1227 (42000) at line 18: Access denied; you need (at least one of) the SUPER privilege(s) for this operation
+
+```bash
+--------------
+SET @@SESSION.SQL_LOG_BIN= 0
+--------------
+
+ERROR 1227 (42000) at line 18: Access denied; you need (at least one of) the SUPER privilege(s) for this operation
+```
+
+mysqldump로 복구하면 무슨 오류인지 안보이다 mysql로 실행하면 보임. SQL 파일에서 SESSION 관련 환경변수 셋팅할 때 권한이 없다는 오류. `--set-gtid-purged=OFF` 옵션으로 SQL 파일에 관련 코드들이 포함되지 않게 할 수 있음.
+
+```bash
+mysqldump db-name --set-gtid-purged=OFF > dump.sql
+```
+
+## 참고자료
 
 [DATABASE2 - MySQL - 생활코딩](https://opentutorials.org/course/3161)
