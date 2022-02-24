@@ -32,6 +32,29 @@ RN에서 사용할 모든 텍스트는 Text component로 감싸서 사용해야 
 
 RN에서 사용할 수 있는 스타일 속성은 CSS와 다름. 편하게 자동완성을 사용하려면 `StyleSheet.create({})` 추천!
 
+## Components
+
+Android/iOS 공통으로 사용할 수 있는 Core Component와 API, 그리고 Android, iOS 각각의 전용 컴포넌트들이 있음.
+
+과거에는 더 많은 컴포넌트들과 API를 RN에서 직접 제공했었으나 지금은 많이 줄임. 지원 컴포넌트와 API를 늘리고 이를 유지보수하는 것보다 성능에 더 집중하며 이렇게 변함.
+
+### [React Native Directory](https://reactnative.directory/)
+
+RN팀에서 모든 컴포넌트를 만들고 유지보수하기에는 리소스가 부족해 커뮤니티에 의존하게됨.
+
+### [Expo SDK](https://docs.expo.dev/versions/latest/)
+
+Expo에서 제공하는 컴포넌트와 API의 모음. Expo 앱 위에서만 동작하는 것이 아닌 순수 RN 앱에서도 사용 가능. 굉장히 많은 종류의 컴포넌트와 API가 있고 안정적임.
+
+## Layout System
+
+RN에서는 Flexbox로 레이아웃을 구성함. (`block`, `inline-block`, `grid` 이런거 없음.)
+
+- 모든 View는 Flex 컨테이너임. CSS 처럼 `display: flex` 해줄 필요가 없음.
+- `flexDirection의` 기본 값은 `column`. CSS 처럼 `row`가 아님.
+
+다양한 화면 크기에 대응하기 위해 비율을 사용할거라면 `flex` 속성을 사용하면 됨.
+
 ## Tools
 
 ### [Expo](https://expo.dev/)
