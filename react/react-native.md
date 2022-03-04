@@ -18,6 +18,14 @@ React를 기반으로 하는 iOS, Andrdoid 크로스플랫폼 애플리케이션
 
 - 참조: https://reactnative.dev/docs/render-pipeline
 
+## 개발환경 설정
+
+빌드에 필요한 도구들(Xcode, Android studio, CocoapPds, Watchman, Node 등)을 설치해야함.
+
+- Xcode는 App Store가 아닌 애플 개발자 사이트에서 다운로드 받아서 설치할 것!!!
+  - App Store에서 설치하면 진짜 너무 오래걸림.
+- CocoaPods는 gem으로 설치가 안되면 brew로 설치하자.
+
 ## Rules
 
 ### Use View component instead of div element
@@ -38,13 +46,16 @@ Android/iOS 공통으로 사용할 수 있는 Core Component와 API, 그리고 A
 
 과거에는 더 많은 컴포넌트들과 API를 RN에서 직접 제공했었으나 지금은 많이 줄임. 지원 컴포넌트와 API를 늘리고 이를 유지보수하는 것보다 성능에 더 집중하며 이렇게 변함.
 
-### [React Native Directory](https://reactnative.directory/)
+### 터치를 처리하는 컴포넌트들
 
-RN팀에서 모든 컴포넌트를 만들고 유지보수하기에는 리소스가 부족해 커뮤니티에 의존하게됨.
+터치했을 때 발생하는 이벤트를 캐치해 그래픽적 피드백을 주거나, 다양한 터치 방식을 처리할 수 있게 만들어주는 컴포넌트.
 
-### [Expo SDK](https://docs.expo.dev/versions/latest/)
-
-Expo에서 제공하는 컴포넌트와 API의 모음. Expo 앱 위에서만 동작하는 것이 아닌 순수 RN 앱에서도 사용 가능. 굉장히 많은 종류의 컴포넌트와 API가 있고 안정적임.
+|           Name           |                            Description                            |
+| :----------------------: | :---------------------------------------------------------------: |
+|     TouchableOpacity     |           터치 시 투명도를 변경하는 것이 대표적인 동작            |
+|    TouchableHighlight    |           터치 시 배경색을 변경하는 것이 대표적인 동작            |
+| TouchableWithoutFeedback |            터치 시 아무 그래픽적인 피드백을 주지 않음             |
+|        Pressable         | 여러가지 터치 이벤트 및 방식에 대해 세세한 설정이 가능한 컴포넌트 |
 
 ## Layout System
 
@@ -55,6 +66,13 @@ RN에서는 Flexbox로 레이아웃을 구성함. (`block`, `inline-block`, `gri
 
 다양한 화면 크기에 대응하기 위해 비율을 사용할거라면 `flex` 속성을 사용하면 됨.
 
+## 3rd Party Components
+
+|                           Name                           |                                                                             Description                                                                             |
+| :------------------------------------------------------: | :-----------------------------------------------------------------------------------------------------------------------------------------------------------------: |
+| [React Native Directory](https://reactnative.directory/) |                 RN 컴포넌트들을 찾아볼 수 있는 저장소.<br/>RN팀에서 모든 컴포넌트를 만들고 유지보수하기에는 리소스가 부족해 커뮤니티에 의존하게됨.                  |
+|    [Expo SDK](https://docs.expo.dev/versions/latest/)    | Expo에서 제공하는 컴포넌트와 API의 모음.<br/>Expo 앱 위에서만 동작하는 것이 아닌 순수 RN 앱에서도 사용 가능.<br/>굉장히 많은 종류의 컴포넌트와 API가 있고 안정적임. |
+
 ## Tools
 
 ### [Expo](https://expo.dev/)
@@ -64,3 +82,14 @@ RN에서는 Flexbox로 레이아웃을 구성함. (`block`, `inline-block`, `gri
 #### [Snack](https://snack.expo.dev/)
 
 React Native를 웹 브라우저에서 개발할 수 있는 코드 에디터.
+
+### RN 프로젝트 생성 도구
+
+RN 개발 시 많이 사용되는 설정과 라이브러리를 프로젝트 생성과 동시에 셋팅
+
+- [Ignite](https://github.com/infinitered/ignite)
+  - 설정과 라이브러리는 물론 디렉토리 구조와 테마 등 많은 것들이 셋팅됨.
+- [create-react-native-app](https://github.com/expo/create-react-native-app)
+  - Facebook, Expo의 합작
+  - Native 파일들(앱 관련 파일)에 접근 가능(Expo는 불가능)
+  - Expo에서 제공하는 프리뷰 사용 가능
