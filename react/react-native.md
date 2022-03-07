@@ -72,6 +72,7 @@ RN에서는 Flexbox로 레이아웃을 구성함. (`block`, `inline-block`, `gri
 | :------------------------------------------------------: | :-----------------------------------------------------------------------------------------------------------------------------------------------------------------: |
 | [React Native Directory](https://reactnative.directory/) |                 RN 컴포넌트들을 찾아볼 수 있는 저장소.<br/>RN팀에서 모든 컴포넌트를 만들고 유지보수하기에는 리소스가 부족해 커뮤니티에 의존하게됨.                  |
 |    [Expo SDK](https://docs.expo.dev/versions/latest/)    | Expo에서 제공하는 컴포넌트와 API의 모음.<br/>Expo 앱 위에서만 동작하는 것이 아닌 순수 RN 앱에서도 사용 가능.<br/>굉장히 많은 종류의 컴포넌트와 API가 있고 안정적임. |
+|     [React Navigation](https://reactnavigation.org/)     |             라우팅과 네비게이션을 위한 라이브러리.<br/>브라우저에는 있지만 RN에는 없는 화면 이동 히스토리 스택과 이를 이용한 이동 등 관리 기능을 제공함             |
 
 ## Tools
 
@@ -89,7 +90,9 @@ RN 개발 시 많이 사용되는 설정과 라이브러리를 프로젝트 생�
 
 - [Ignite](https://github.com/infinitered/ignite)
   - 설정과 라이브러리는 물론 디렉토리 구조와 테마 등 많은 것들이 셋팅됨.
+  - 단, 세부적인 네이티브 앱 설정이 힘듦. 모두 Ignite 설정에 의존해야함.
 - [create-react-native-app](https://github.com/expo/create-react-native-app)
   - Facebook, Expo의 합작
   - Native 파일들(앱 관련 파일)에 접근 가능(Expo는 불가능)
   - Expo에서 제공하는 프리뷰 사용 가능
+  - 과거에는 package.json의 scripts에 react-native 명령을 사용했으나, 현재는 expo를 사용함.
