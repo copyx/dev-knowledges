@@ -72,7 +72,21 @@ RN에서는 Flexbox로 레이아웃을 구성함. (`block`, `inline-block`, `gri
 | :------------------------------------------------------: | :-----------------------------------------------------------------------------------------------------------------------------------------------------------------: |
 | [React Native Directory](https://reactnative.directory/) |                 RN 컴포넌트들을 찾아볼 수 있는 저장소.<br/>RN팀에서 모든 컴포넌트를 만들고 유지보수하기에는 리소스가 부족해 커뮤니티에 의존하게됨.                  |
 |    [Expo SDK](https://docs.expo.dev/versions/latest/)    | Expo에서 제공하는 컴포넌트와 API의 모음.<br/>Expo 앱 위에서만 동작하는 것이 아닌 순수 RN 앱에서도 사용 가능.<br/>굉장히 많은 종류의 컴포넌트와 API가 있고 안정적임. |
-|     [React Navigation](https://reactnavigation.org/)     |             라우팅과 네비게이션을 위한 라이브러리.<br/>브라우저에는 있지만 RN에는 없는 화면 이동 히스토리 스택과 이를 이용한 이동 등 관리 기능을 제공함             |
+
+### [React Navigation](https://reactnavigation.org/)
+
+라우팅과 네비게이션을 위한 라이브러리. 브라우저에는 있지만 RN에는 없는 화면 이동 히스토리 스택과 이를 이용한 이동 등 관리 기능을 제공함.
+
+- Stack Navigator vs Native Stack Navigator
+  - Stack Navigator는 자바스크립트로 구현됨. 따라서 굉장히 많은 부분을 커스터마이징 할 수 있음. 다만 상대적으로 Native Stack Navigator에 비해 성능이 안좋을 수 있으나 우려할 수준은 아님.
+  - Native Stack Navigator는 Native API를 이용함. 성능은 더 좋으나 커스터마이징 할 수 있는 부분이 Stack Navigator에 비해 상대적으로 적음.
+
+#### Tab & Stack 같이 쓰기
+
+- [탭마다 스택 네비게이터 추가](https://reactnavigation.org/docs/tab-based-navigation#a-native-stack-navigator-for-each-tab)
+- [Root 네비게이터 아래에 탭과 스택 네비게이터 추가](https://reactnavigation.org/docs/screen-options-resolution#setting-parent-screen-options-based-on-child-navigators-state)
+  - `navigate()`함수에 이동하고 싶은 스크린 이름이 아닌 이동하고자 하는 네비게이터의 이름을 전달. 스크린 이름은 다음 인자 객체에 추가
+  - `navigate('stack', { screen: 'one' })`
 
 ## Tools
 
