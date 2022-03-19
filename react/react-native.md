@@ -88,6 +88,19 @@ RN에서는 Flexbox로 레이아웃을 구성함. (`block`, `inline-block`, `gri
   - `navigate()`함수에 이동하고 싶은 스크린 이름이 아닌 이동하고자 하는 네비게이터의 이름을 전달. 스크린 이름은 다음 인자 객체에 추가
   - `navigate('stack', { screen: 'one' })`
 
+### [Styled Components](https://styled-components.com/docs/basics#react-native)
+
+RN에서도 스타일드 컴포넌트 사용 가능. 사용 방법은 `import styled from 'styled-components/native'`로 뒤에 `native` 경로를 붙여서 임포트하고 리액트에서 사용하던 것처럼 styled 객체에서 원하는 컴포넌트에 접근해서 사용하면 됨.
+
+```javascript
+import styled from "styled-components/native";
+
+const Btn = styled.TouchableOpacity`
+  flex: 1;
+  font-size: 20px;
+`;
+```
+
 ## Tools
 
 ### [Expo](https://expo.dev/)
