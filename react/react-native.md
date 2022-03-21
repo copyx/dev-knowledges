@@ -101,6 +101,19 @@ const Btn = styled.TouchableOpacity`
 `;
 ```
 
+### TypeScript
+
+RN은 Babel을 사용함. RN 가이드에 나와있는대로 타입스크립트를 셋팅해도 타입스크립트 컴파일러를 이용하지 않음. 타입스크립트 컴파일러는 오직 Type Checking을 하는 데 사용하는 것으로 제안하고 있음.
+
+타입스크립트 셋팅해 타입스크립트를 사용했고, 거기서 에러가 발생해도 앱 빌드가 실패하지 않음. `yarn tsc`나 에디터에서 에러가 발생해도 앱 빌드는 잘 됨. 하지만 Babel을 이용해 타입스크립트를 트랜스폼하므로 [몇 가지 주의사항](https://babeljs.io/docs/en/babel-plugin-transform-typescript)이 있음.
+
+```sh
+# 새로 프로젝트를 생성하는 경우
+npx react-native init MyApp --template react-native-template-typescript
+# 이미 만들어진 프로잭트에 타입스크립트를 추가하는 경우
+npm install -D typescript @types/jest @types/react @types/react-native @types/react-test-renderer
+```
+
 ## Tools
 
 ### [Expo](https://expo.dev/)
