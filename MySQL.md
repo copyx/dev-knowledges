@@ -149,6 +149,12 @@ RENAME TABLE old_table TO new_table;
 ALTER TABLE old_table RENAME new_table;
 ```
 
+### AUTO_INCREMENT 변경
+
+```sql
+ALTER TABLE table_name AUTO_INCREMENT=3;
+```
+
 ## DATA 관련 명령
 
 DML(Data Manipulation Language). 데이터를 조작하고 다루는 언어. 데이터의 CRUD 동작들을 서술.
