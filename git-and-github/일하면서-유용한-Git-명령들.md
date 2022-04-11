@@ -44,6 +44,15 @@ git fetch --unshallow origin
 
 참고: https://gist.github.com/gobinathm/96e27a588bb447154604963e09c38ddc
 
+## 커밋 단위 브랜치 비교
+
+```bash
+git log "branch-a".."branch-b"
+git log "branch-a".."branch-b" -p
+```
+
+브랜치 b에는 있고, 브랜치 a에는 없는 커밋을 확인 가능. `-p` 옵션은 커밋의 상세 변경 내용 확인 가능.
+
 ## 원격 저장소에서 삭제된 브랜치 정리
 
 원격 저장소에서는 삭제됐지만, 로컬에는 남아있는 브랜치를 한 번에 삭제하는 명령
