@@ -84,6 +84,7 @@ kube-contoller-manager 컴포넌트에 의해 실행되는 프로세스.
   - Diff: 차이점 발견 (Current State != Desired State)
   - Act: 조치 (Current State => Desired State)
 - 논리적으로 다양한 컨트롤러 존재 (Replication, Node, Endpoint 등)
+  - 한 루프 안에서 모든 상태 요소를 관리하지 않고 상태 요소마다 따로 루프를 가짐.
 - 복잡성을 낮추기 위해 하나의 프로세스로 실행
 
 ### Node
@@ -430,6 +431,7 @@ spec:
 클러스터의 애플리케이션이 늘어날 때마다 해당 애플리케이션의 포트를 위한 서비스도 늘어나야함. 이를 편하게 하기위해 인그레스가 나옴.
 
 - 같은 IP와 Port로 접근해도 도메인 또는 경로별 라우팅
+- 인그레스 하나로 여러 개의 로드밸런서와 같은 역할을 할 수 있음.
 
 ## [Volume](https://kubernetes.io/ko/docs/concepts/storage/volumes/)
 
