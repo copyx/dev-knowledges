@@ -73,6 +73,44 @@
 - 노드의 현재 상태와 Pod의 요구사항을 체크
   - 노드에 라벨 부여 (예: a-zone, b-zone, gpu-enabled 등)
 
+##### Node Affinity
+
+개념적으로 nodeSelector와 비슷함. 레이블을 이용해 팟이 어느 노드에 스케줄링되는 것을 허용할지 표현 가능.
+
+두 가지 종류의 Node Affinity가 있음.
+
+- requiredDuringSchedulingIgnoredDuringExecution
+  - 강한 요구사항
+- preferredDuringSchedulingIgnoredDuringExecution
+  - 약한 요구사항
+
+이 외에도 할당하지 말아야될 노드를 표현하는 Anti Node Affinity도 있음.
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx
+spec:
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+        - matchExpressions:
+          - key: mynode
+            operator: In
+            values:
+            - worker-1
+          - key: mynode
+            operator: NotIn # NotIn을 이용해 Anti Node Affinity도 가능
+            values:
+            - worker-3
+
+ containers:
+ - name: nginx
+   image: nginx
+```
+
 #### Controller
 
 kube-contoller-manager 컴포넌트에 의해 실행되는 프로세스.
@@ -348,6 +386,32 @@ kubectl rollout history deployment/echo-deploy --revision
 kubectl rollout undo deployment/echo-deploy
 kubectl rollout undo deployment/echo-deploy --to-revision=2
 ```
+
+이 외에도 이미지 변경, 롤아웃 상태, scale 변경 명령어가 있음.
+
+```sh
+# nginx-deploy Deployment의 nginx 컨테이너 이미지를 nginx:1.9.1로 변경
+kubectl set image deploy nginx-deploy nginx=nginx:1.9.1
+
+# nginx-deploy Deployment의 가장 최근 롤아웃 상태 조회
+kubectl rollout status deployment/nginx-deploy
+
+# nginx-deploy Deployment의 레플리카 수를 6개로 변경
+kubectl scale deployment nginx-deploy --replicas=6
+```
+
+#### Deployment Types
+
+- Recreate
+  - A가 완전히 꺼진 다음 B를 올림
+- Rolling Updates(Ramped or Incremental)
+  - 쿠버네티스 기본 배포 전략
+  - 배포 완료까지 시간이 좀 걸림
+  - B 버전 하나를 준비해 트래픽을 받을 수 있으면, 로드밸런서와 연결된 풀에서 A 하나를 제거
+- Canary
+  - 새 버전을 모두 배포하기 전 일부 인스턴스에만 배포해서 테스트할 때 사용
+- Blue Green
+  - Blue(구버전)과 동일한 규모의 Green(신버전)을 한꺼번에 만들고 로드밸런서 연결만 바꾸는 방식
 
 ### 그 외
 
