@@ -73,16 +73,35 @@
 - 노드의 현재 상태와 Pod의 요구사항을 체크
   - 노드에 라벨 부여 (예: a-zone, b-zone, gpu-enabled 등)
 
-##### Node Affinity
+##### [Node Selector](https://kubernetes.io/ko/docs/concepts/scheduling-eviction/assign-pod-node/#nodeselector)
+
+사용자가 명시한 레이블을 가진 노드에만 팟을 스케줄링. 없으면 안함.
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx
+  labels:
+    env: test
+spec:
+  containers:
+    - name: nginx
+      image: nginx
+  nodeSelector:
+    gpu: true
+```
+
+##### [Node Affinity](https://kubernetes.io/ko/docs/concepts/scheduling-eviction/assign-pod-node/#affinity-and-anti-affinity)
 
 개념적으로 nodeSelector와 비슷함. 레이블을 이용해 팟이 어느 노드에 스케줄링되는 것을 허용할지 표현 가능.
 
 두 가지 종류의 Node Affinity가 있음.
 
-- requiredDuringSchedulingIgnoredDuringExecution
-  - 강한 요구사항
-- preferredDuringSchedulingIgnoredDuringExecution
-  - 약한 요구사항
+- `requiredDuringSchedulingIgnoredDuringExecution`
+  - 강한 요구사항. 규칙이 만족되지 않으면 스케줄러가 파드를 스케줄링할 수 없음.
+- `preferredDuringSchedulingIgnoredDuringExecution`
+  - 약한 요구사항. 해당되는 노드가 없더라도, 스케줄러는 여전히 파드를 스케줄링 함.
 
 이 외에도 할당하지 말아야될 노드를 표현하는 Anti Node Affinity도 있음.
 
@@ -105,11 +124,50 @@ spec:
             operator: NotIn # NotIn을 이용해 Anti Node Affinity도 가능
             values:
             - worker-3
-
  containers:
  - name: nginx
    image: nginx
 ```
+
+##### [Taints & Tolerations](https://kubernetes.io/ko/docs/concepts/scheduling-eviction/taint-and-toleration/)
+
+Node Selector, Node Affinity가 노드를 고르는 팟의 속성이라면, 테인트는 그 반대로 노드가 파드를 제외.
+
+```sh
+kubectl taint nodes node1 key1=value1:NoSchedule
+```
+
+톨러레이션은 파드에 적용. 톨러레이션과 일치하는 테인트를 무시하게 만듦.
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx
+  labels:
+    env: test
+spec:
+  containers:
+    - name: nginx
+      image: nginx
+      imagePullPolicy: IfNotPresent
+  tolerations:
+    - key: "example-key"
+      operator: "Exists" # Exists 인 경우 value 를 지정하지 않아야 함
+      effect: "NoSchedule"
+    - key: "key1"
+      operator: "Equal"
+      value: "value1"
+      effect: "NoSchedule"
+```
+
+무시되지 않은 테인트가 하나 이상 있으면 이펙트별로 효과 발생.
+
+- `NoSchedule` : 해당 노드에 파드를 스케줄하지 않음.
+- `PreferNoSchedule` : 파드를 해당 노드에 스케줄하지 않으려고 **시도**.
+- `NoExecute` : 이미 실행중인 파드를 노드에서 축출하고, 아직 실행되지 않았으며 노드에 스케줄하지 않음.
+
+#####
 
 #### Controller
 
