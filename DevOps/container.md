@@ -62,7 +62,7 @@ Python 버전을 업데이트하면? 패키지 버전을 올리면? 어느 단�
 
 ## 배포 방식의 변화
 
-![Container Evolution](images/container_evolution.svg)
+![Container Evolution](/images/container_evolution.svg)
 이미지 출처: https://kubernetes.io/ko/docs/concepts/overview/what-is-kubernetes/
 
 ### 1. Traditional Deployment

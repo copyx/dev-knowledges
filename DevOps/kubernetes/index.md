@@ -18,7 +18,7 @@
 >
 > From [Cloud Native Definition v1.0](https://github.com/cncf/toc/blob/main/DEFINITION.md#%ED%95%9C%EA%B5%AD%EC%96%B4)
 
-## [Container Orchestration](container-orchestration.md)
+## [Container Orchestration](/DevOps/container-orchestration.md)
 
 ## 왜 Kubernetes인가?
 
@@ -37,13 +37,13 @@
 
 노드는 팟을 호스트함. 컨트롤 플레인은 노드와 팟을 관리. 프로덕션 환경에서는 일반적으로 컨트롤 플레인이 여러 컴퓨터에 걸쳐 실행되고, 클러스터는 일반적으로 여러 노드를 실행.
 
-![쿠버네티스 컴포넌트](images/components-of-kubernetes.svg)
+![쿠버네티스 컴포넌트](/images/components-of-kubernetes.svg)
 
 출처: https://kubernetes.io/ko/docs/concepts/overview/components/
 
 ### Master(Control Plane)
 
-![쿠버네티스 아키텍쳐 - Master](images/kubernetes_master.png)
+![쿠버네티스 아키텍쳐 - Master](/images/kubernetes_master.png)
 
 #### etcd
 
@@ -185,7 +185,7 @@ kube-contoller-manager 컴포넌트에 의해 실행되는 프로세스.
 
 ### Node
 
-![쿠버네티스 아키텍쳐 - Node](images/kubernetes_node.png)
+![쿠버네티스 아키텍쳐 - Node](/images/kubernetes_node.png)
 
 #### Kubelet
 
@@ -205,7 +205,7 @@ kube-contoller-manager 컴포넌트에 의해 실행되는 프로세스.
 
 ### 쿠버네티스 흐름
 
-![팟 생성 흐름](images/pod_creation_flow.gif)
+![팟 생성 흐름](/images/pod_creation_flow.gif)
 
 ### Addons
 
@@ -234,7 +234,7 @@ kube-contoller-manager 컴포넌트에 의해 실행되는 프로세스.
 - 여러 컨테이너가 하나의 팟에 속할 수 있음
   - 호스트 디렉토리나 로컬호스트 네트워크를 공유할 수 있음
 
-![Pod 생성 과정](images/kubernetes_pod_creation_sequence.svg)
+![Pod 생성 과정](/images/kubernetes_pod_creation_sequence.svg)
 이미지 출처: [Pod 생성 분석 | 쿠버네티스 안내서](https://subicura.com/k8s/guide/pod.html#pod-%E1%84%89%E1%85%A2%E1%86%BC%E1%84%89%E1%85%A5%E1%86%BC-%E1%84%87%E1%85%AE%E1%86%AB%E1%84%89%E1%85%A5%E1%86%A8)
 
 `kubectl run` 명령을 이용해 팟을 생성하기도 하지만, 대부분 YAML 파일로 많이 만듦.
@@ -387,7 +387,7 @@ spec:
 
 - 내부적으로 ReplicaSet을 이용해 배포 버전을 관리
 
-![Deployment](images/kubernetes_deployment.gif)
+![Deployment](/images/kubernetes_deployment.gif)
 
 ```yaml
 apiVersion: apps/v1
@@ -498,7 +498,7 @@ https://kubernetes.io/ko/docs/concepts/workloads/controllers/
 
 https://kubernetes.io/ko/docs/concepts/services-networking/
 
-![Common Set](images/kubernetes_common_set.png)
+![Common Set](/images/kubernetes_common_set.png)
 
 서비스의 레이블 이름은 [RFC 1035](https://kubernetes.io/ko/docs/concepts/overview/working-with-objects/names/#rfc-1035-label-names)에 정의된 DNS 레이블 표준을 따라야함.
 
@@ -529,7 +529,7 @@ spec:
     tier: db
 ```
 
-![Service creation flow](images/kubernetes_service_creation_flow.svg)
+![Service creation flow](/images/kubernetes_service_creation_flow.svg)
 
 ### Service - NodePort
 
@@ -539,7 +539,7 @@ spec:
 - NodePort는 ClusterIP의 기능을 포함함.
 - 노드가 사라졌을 때 자동으로 다른 노드를 통해 접근이 불가능함.
 
-![Multi-NodePort](images/kubernetes_nodeport-multi.png)
+![Multi-NodePort](/images/kubernetes_nodeport-multi.png)
 
 ### Service - LoadBalancer
 
@@ -619,7 +619,7 @@ spec:
 
 원하는 상태(desiged state)를 다양한 오브젝트(object)로 명세(spec)를 작성해 API 서버에 YAML 형식으로 전달
 
-![ReplicaSet Creation Flow](images/kubernetes_replicaset_creation_flow.png)
+![ReplicaSet Creation Flow](/images/kubernetes_replicaset_creation_flow.png)
 
 ## 실습 환경
 

@@ -54,37 +54,37 @@
 
 노드마다 명령을 내리지 않아도 선언해놓은 값대로 컨테이너 3개 실행
 
-![상태 유지 예시 1](images/container_orchestration_state_1.png)
+![상태 유지 예시 1](/images/container_orchestration_state_1.png)
 
 #### 서버 장애 시
 
 한 컨테이너에 문제가 생기면 알아서 새 컨테이너를 실행
 
-![상태 유지 예시 2](images/container_orchestration_state_2.png)
+![상태 유지 예시 2](/images/container_orchestration_state_2.png)
 
 ### Scheduling
 
 새 컨테이너를 하나 더 실행하고 싶을 때 어느 노드에 여유가 있는지 파악하고 배치하고, 여유있는 노드가 없으면 노드를 추가함
 
-![스케쥴링 예시](images/container_orchestration_scheduling.png)
+![스케쥴링 예시](/images/container_orchestration_scheduling.png)
 
 ### Rollout/Rollback
 
 컨테이너의 배포 버전을 하나하나 관리하는 것이 아닌 중앙에서 관리
 
-![서비스 발견 예시](images/container_orchestration_rollout_rollback.gif)
+![서비스 발견 예시](/images/container_orchestration_rollout_rollback.gif)
 
 ### Service Discovery
 
 컨테이너가 추가되고 IP가 할당되면 중앙의 서버나 저장소에 등록하고, 이런 변경사항이 생기면 프록시 서버의 설정을 변경하고 프로세스를 재시작
 
-![서비스 발견 예시](images/container_orchestration_service_discovery.png)
+![서비스 발견 예시](/images/container_orchestration_service_discovery.png)
 
 ### Volume Storage
 
 노드마다 필요한 스토리지를 직접 연결할 필요가 없음.
 
-![서비스 발견 예시](images/container_orchestration_volume_storage.png)
+![서비스 발견 예시](/images/container_orchestration_volume_storage.png)
 
 # Reference
 

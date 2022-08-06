@@ -1,6 +1,6 @@
 # Database
 
-![CRUD - 생활코딩](CRUD.png)
+![CRUD - 생활코딩](/images/CRUD.png)
 
 - 데이터베이스의 입력(Input)과 출력(Output)은 CUD와 R로 이뤄진다.
 - 데이터를 다룰 때 필요한 대부분의 동작은 CRUD로 끝난다.

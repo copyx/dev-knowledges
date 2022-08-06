@@ -70,7 +70,7 @@ SET PASSWORD = PASSWORD('new-password');
 
 ## MySQL의 구조
 
-![MySQL 기본 구조](mysql-structure.png)
+![MySQL 기본 구조](/images/mysql-structure.png)
 
 MySQL에서는 Database와 Schema를 동의어로 사용함.
 

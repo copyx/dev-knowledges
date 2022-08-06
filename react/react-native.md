@@ -14,7 +14,7 @@ React를 기반으로 하는 iOS, Andrdoid 크로스플랫폼 애플리케이션
 
 렌더 파이프라인의 각 단계는 상황마다 다른 스레드에서 발생할 수 있음. 자세한 내용은 [Threading model](https://reactnative.dev/docs/threading-model) 참조
 
-![React native - Data flow](images/react-native-data-flow.jpeg)
+![React native - Data flow](/images//images/react-native-data-flow.jpeg)
 
 - 참조: https://reactnative.dev/docs/render-pipeline
 

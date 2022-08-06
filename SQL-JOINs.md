@@ -4,7 +4,7 @@
 
 ## JOIN의 종류
 
-![SQL JOINs Cheatsheet](sql-joins-cheatsheet.png)
+![SQL JOINs Cheatsheet](/images/sql-joins-cheatsheet.png)
 
 ### INNER JOIN
 

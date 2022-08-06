@@ -230,7 +230,7 @@ services:
 - 프로세스는 환경(파일)을 변경할 수 있음
 - 이 환경을 저장해서 새로운 이미지를 생성
 
-![Docker Custom Image](images/docker_custom_image.png)
+![Docker Custom Image](/images/docker_custom_image.png)
 
 이미지의 네이밍 규칙은 다음과 같음
 
