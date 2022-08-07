@@ -32,7 +32,7 @@
 
 ### [Node Selector](https://kubernetes.io/ko/docs/concepts/scheduling-eviction/assign-pod-node/#nodeselector)
 
-사용자가 명시한 레이블을 가진 노드에만 팟을 스케줄링. 없으면 안함.
+사용자가 명시한 레이블을 가진 노드에만 파드을 스케줄링. 없으면 안함.
 
 ```yaml
 apiVersion: v1
@@ -51,7 +51,7 @@ spec:
 
 ### [Node Affinity](https://kubernetes.io/ko/docs/concepts/scheduling-eviction/assign-pod-node/#affinity-and-anti-affinity)
 
-개념적으로 nodeSelector와 비슷함. 레이블을 이용해 팟이 어느 노드에 스케줄링되는 것을 허용할지 표현 가능.
+개념적으로 nodeSelector와 비슷함. 레이블을 이용해 파드이 어느 노드에 스케줄링되는 것을 허용할지 표현 가능.
 
 두 가지 종류의 Node Affinity가 있음.
 
@@ -88,7 +88,7 @@ spec:
 
 ### [Taints & Tolerations](https://kubernetes.io/ko/docs/concepts/scheduling-eviction/taint-and-toleration/)
 
-Node Selector, Node Affinity가 노드를 고르는 팟의 속성이라면, 테인트는 그 반대로 노드가 파드를 제외.
+Node Selector, Node Affinity가 노드를 고르는 파드의 속성이라면, 테인트는 그 반대로 노드가 파드를 제외.
 
 ```sh
 kubectl taint nodes node1 key1=value1:NoSchedule

@@ -39,8 +39,8 @@
   - 모든 클러스터는 최소 한 개의 노드를 가짐
   - 클러스터는 일반적으로 여러 노드를 실행
 - **노드** = 컨테이너화된 애플리케이션을 실행하는 워커 머신
-  - 노드는 팟을 호스팅
-- **컨트롤 플레인**은 노드와 팟을 관리
+  - 노드는 파드을 호스팅
+- **컨트롤 플레인**은 노드와 파드을 관리
   - 프로덕션 환경에서는 일반적으로 컨트롤 플레인이 여러 컴퓨터에 걸쳐 실행됨
 
 쿠버네티스가 완전히 작동하기 위해서는 다양한 컴포넌트가 필요하고, 컴포넌트들은 **컨트롤 플레인 컴포넌트**와 **노드 컴포넌트**로 나뉨.
@@ -55,13 +55,13 @@
 | kube-controller-manager        | 컨트롤러 프로세스를 실행하는 컴포넌트                         |
 | cloud-controller-manager (opt) | 클라우드별 컨트롤 로직을 포함하는 컴포넌트                    |
 
-### Node
+### Node Components
 
 ![쿠버네티스 아키텍쳐 - Node](/images/kubernetes_node.png)
 
 #### Kubelet
 
-팟에서 컨테이너가 확실하게 동작하도록 관리하는 컴포넌트
+파드에서 컨테이너가 확실하게 동작하도록 관리하는 컴포넌트
 
 - 각 노드에서 실행
 - Pod을 실행/중지하고 상태를 체크
@@ -77,7 +77,7 @@
 
 ### 쿠버네티스 흐름
 
-![팟 생성 흐름](/images/pod_creation_flow.gif)
+![파드 생성 흐름](/images/pod_creation_flow.gif)
 
 ### Addons
 
@@ -95,21 +95,21 @@
 
 ## Workloads
 
-쿠버네티스에서 구동되는 애플리케이션. 워크로드가 하나의 컴포넌트든 여러 컴포넌트가 함께하든, 쿠버네티스에서는 애플리케이션을 팟 집합 내에서 실행함.
+쿠버네티스에서 구동되는 애플리케이션. 워크로드가 하나의 컴포넌트든 여러 컴포넌트가 함께하든, 쿠버네티스에서는 애플리케이션을 파드 집합 내에서 실행함.
 
-각각의 팟을 직접 관리하는 대신 워크로드 리소스 사용 가능.
+각각의 파드을 직접 관리하는 대신 워크로드 리소스 사용 가능.
 
 ## Pod
 
 - 가장 작은 배포 단위
 - 전체 클러스터에서 고유한 IP 할당
-- 여러 컨테이너가 하나의 팟에 속할 수 있음
+- 여러 컨테이너가 하나의 파드에 속할 수 있음
   - 호스트 디렉토리나 로컬호스트 네트워크를 공유할 수 있음
 
 ![Pod 생성 과정](/images/kubernetes_pod_creation_sequence.svg)
 이미지 출처: [Pod 생성 분석 | 쿠버네티스 안내서](https://subicura.com/k8s/guide/pod.html#pod-%E1%84%89%E1%85%A2%E1%86%BC%E1%84%89%E1%85%A5%E1%86%BC-%E1%84%87%E1%85%AE%E1%86%AB%E1%84%89%E1%85%A5%E1%86%A8)
 
-`kubectl run` 명령을 이용해 팟을 생성하기도 하지만, 대부분 YAML 파일로 많이 만듦.
+`kubectl run` 명령을 이용해 파드을 생성하기도 하지만, 대부분 YAML 파일로 많이 만듦.
 
 ### [Pod 라이프사이클](https://kubernetes.io/ko/docs/concepts/workloads/pods/pod-lifecycle/)
 
@@ -160,7 +160,7 @@ spec:
 
 #### readinessProbe
 
-컨테이너 준비 여부 체크 후 준비되지 않으면 팟으로 들어오는 요청을 제외. livenessProbe는 재시작하지만 readinessProbe는 요청만 제외시킴.
+컨테이너 준비 여부 체크 후 준비되지 않으면 파드으로 들어오는 요청을 제외. livenessProbe는 재시작하지만 readinessProbe는 요청만 제외시킴.
 
 ```yaml
 apiVersion: v1
@@ -197,7 +197,7 @@ spec:
 
 ### 다중 컨테이너
 
-하나의 팟에 속한 컨테이너는 네트워크를 localhost로 공유하고, 디렉토리 또한 공유할 수 있음.
+하나의 파드에 속한 컨테이너는 네트워크를 localhost로 공유하고, 디렉토리 또한 공유할 수 있음.
 
 ```yaml
 apiVersion: v1
@@ -219,13 +219,13 @@ spec:
 
 ## Workload Resources
 
-사용자를 대신해 팟 집합을 관리하는 리소스. 컨트롤러(지정한 상태와 일치하도록 올바른 수와 유형의 팟이 실행되고 있는지 확인)를 구성.
+사용자를 대신해 파드 집합을 관리하는 리소스. 컨트롤러(지정한 상태와 일치하도록 올바른 수와 유형의 파드이 실행되고 있는지 확인)를 구성.
 
 ### ReplicaSet
 
-- 여러개의 팟을 관리
-  - 신규 팟을 생성하거나, 기존 팟을 제거해 원하는 수(Replicas)를 유지
-  - 레이블을 이용해 팟을 체크함. 레이블이 겹치지 않게 신경써야함.
+- 여러개의 파드을 관리
+  - 신규 파드을 생성하거나, 기존 파드을 제거해 원하는 수(Replicas)를 유지
+  - 레이블을 이용해 파드을 체크함. 레이블이 겹치지 않게 신경써야함.
 - 다만 실전에서 ReplicaSet이 단독으로 사용되는 일은 거의 없음. ReplicaSet을 관리하는 Deployment를 주로 사용함.
 
 ```yaml
@@ -234,8 +234,8 @@ kind: ReplicaSet
 metadata:
   name: echo-rs
 spec:
-  replicas: 1 # 몇 개의 팟을 유지할건지
-  selector: # 관리 대상인 팟을 무엇으로 구분할지
+  replicas: 1 # 몇 개의 파드을 유지할건지
+  selector: # 관리 대상인 파드을 무엇으로 구분할지
     matchLabels:
       app: echo
       tier: app
@@ -348,25 +348,25 @@ kubectl scale deployment nginx-deploy --replicas=6
 https://kubernetes.io/ko/docs/concepts/workloads/controllers/
 
 - Daemon Set
-  - 모든 노드에 꼭 하나씩만 떠있길 원하는 팟을 만들 때 사용
+  - 모든 노드에 꼭 하나씩만 떠있길 원하는 파드을 만들 때 사용
   - 예) 데이터, 로그 수집
 - Stateful Set
-  - 순차적인 팟 실행, 볼륨 재활용 등에 사용
+  - 순차적인 파드 실행, 볼륨 재활용 등에 사용
 - Job / CronJob
-  - 한 번 실행하고 죽는 팟
+  - 한 번 실행하고 죽는 파드
   - CronJob은 Job을 [Cron](https://ko.wikipedia.org/wiki/Cron) 형식으로 쓰여진 주어진 일정에 따라 주기적으로 반복
 
 ## Service, LoadBalancer, Network
 
-> 쿠버네티스에서 서비스는 팟의 논리적 집합과 그것들에 접근할 수 있는 정책을 정의하는 추상적 개념이다.
+> 쿠버네티스에서 서비스는 파드의 논리적 집합과 그것들에 접근할 수 있는 정책을 정의하는 추상적 개념이다.
 >
 > From [서비스 | Kubernetes](https://kubernetes.io/ko/docs/concepts/services-networking/service/)
 
-팟은 자체 IP를 가짐. 그래서 팟끼리 직접 통신할 수 있지만, 쉽게 생성되고 사라지는 특성 때문에 이는 위험함. 이를 해결하기 위해 고정된 IP를 가진 서비스를 두고 이를 통해 통신.
+파드은 자체 IP를 가짐. 그래서 파드끼리 직접 통신할 수 있지만, 쉽게 생성되고 사라지는 특성 때문에 이는 위험함. 이를 해결하기 위해 고정된 IP를 가진 서비스를 두고 이를 통해 통신.
 
-서비스가 대상으로 하는 팟 집합은 일반적으로 셀렉터가 결정.
+서비스가 대상으로 하는 파드 집합은 일반적으로 셀렉터가 결정.
 
-팟의 노출 범위에 따라 ClusterIP, NodePort, LoadBalancer로 나뉨.
+파드의 노출 범위에 따라 ClusterIP, NodePort, LoadBalancer로 나뉨.
 
 https://kubernetes.io/ko/docs/concepts/services-networking/
 
@@ -377,15 +377,15 @@ https://kubernetes.io/ko/docs/concepts/services-networking/
 ### Service - ClusterIP
 
 - 클러스터 내부에서 사용하는 프록시
-- 팟은 동적이지만 서비스는 고유 IP를 가짐
+- 파드은 동적이지만 서비스는 고유 IP를 가짐
 - 클러스터 내부에서 서비스 연결은 DNS를 이용
   - 서비스의 이름이 내부 DNS에 등록되서 이를 도메인으로 접근이 가능해짐
 
-|          Field          |                   Description                    |
-| :---------------------: | :----------------------------------------------: |
-|    `spec.ports.port`    |               서비스가 오픈할 포트               |
-| `spec.ports.targetPort` | 서비스가 접근할 팟의 포트 (기본값은 port와 동일) |
-|     `spec.selector`     |        서비스가 접근할 팟의 레이블 선택자        |
+|          Field          |                    Description                     |
+| :---------------------: | :------------------------------------------------: |
+|    `spec.ports.port`    |                서비스가 오픈할 포트                |
+| `spec.ports.targetPort` | 서비스가 접근할 파드의 포트 (기본값은 port와 동일) |
+|     `spec.selector`     |        서비스가 접근할 파드의 레이블 선택자        |
 
 ```yaml
 apiVersion: v1
@@ -407,7 +407,7 @@ spec:
 
 - 노드(host)에 노출되어 외부에서 접근 가능한 서비스
   - 클러스터의 모든 노드에 포트를 오픈
-  - 여러 개의 노드가 있다면 아무 노드로 접근해도 지정한 팟으로 접근
+  - 여러 개의 노드가 있다면 아무 노드로 접근해도 지정한 파드으로 접근
 - NodePort는 ClusterIP의 기능을 포함함.
 - 노드가 사라졌을 때 자동으로 다른 노드를 통해 접근이 불가능함.
 
@@ -429,7 +429,7 @@ spec:
 
 ## [Volume](https://kubernetes.io/ko/docs/concepts/storage/volumes/)
 
-데이터를 영속성을 가진 별도의 저장소에 저장하지 않으면 팟이 제거됐을 때 사라짐. 쿠버네티스의 볼륨이 컨테이너의 디렉토리를 외부 저장소와 연결해줌. 그리고 다양한 플러그인 통해 흔히 사용하는 대부분의 스토리지를 별도 설정없이 사용할 수 있음.
+데이터를 영속성을 가진 별도의 저장소에 저장하지 않으면 파드이 제거됐을 때 사라짐. 쿠버네티스의 볼륨이 컨테이너의 디렉토리를 외부 저장소와 연결해줌. 그리고 다양한 플러그인 통해 흔히 사용하는 대부분의 스토리지를 별도 설정없이 사용할 수 있음.
 
 - AWS Elastic Block Storage
 - Azure Disk
@@ -442,11 +442,11 @@ spec:
 - 키-값 쌍으로 구성됨.
 - 최대 1MiB 크기의 데이터 저장 가능.
 - `spec` 대신 `data`(UTF-8), `binaryData`(Base64) 필드가 있음.
-- 다양한 방식으로 팟에서 활용 가능
+- 다양한 방식으로 파드에서 활용 가능
   - 컨테이너 커맨드와 인수
   - 컨테이너에 대한 환경변수
   - 읽기 전용 볼륨에 파일 추가
-  - 쿠버네티스 API를 이용해 컨피그맵 읽는 코드 팟에서 실행
+  - 쿠버네티스 API를 이용해 컨피그맵 읽는 코드 파드에서 실행
 
 ```yml
 apiVersion: v1
@@ -476,7 +476,7 @@ spec:
 
 ## Secret
 
-암호, 토큰, 키 같은 중요 데이터를 보관하는 오브젝트. 중요 데이터를 코드나 팟 스펙, 컨테이너 이미지 등에 포함시키지 않고 분리하기 위해 사용.
+암호, 토큰, 키 같은 중요 데이터를 보관하는 오브젝트. 중요 데이터를 코드나 파드 스펙, 컨테이너 이미지 등에 포함시키지 않고 분리하기 위해 사용.
 
 **단, 암호화되지 않은 상태로 etcd에 저장됨.(Base64로 인코딩 되는 것 외에는 없음) 암호화를 적용하려면 외부솔루션(예: vault) 적용 필요**
 
@@ -548,7 +548,7 @@ kubectl describe [type]/[name]
 kubectl describe po/wordpress-5cf6c98486-twmrc
 ```
 
-여기서 Events 항목을 확인할 수 있는데, 해당 팟에게 발생한 일들을 확인할 수 있음. 이를 통해 원하는 대로 팟이 안뜨거나 할 때 원인 분석 가능.
+여기서 Events 항목을 확인할 수 있는데, 해당 파드에게 발생한 일들을 확인할 수 있음. 이를 통해 원하는 대로 파드이 안뜨거나 할 때 원인 분석 가능.
 
 ### `delete`
 
@@ -561,7 +561,7 @@ kubectl delete po/wordpress-5cf6c98486-twmrc
 
 ### `logs`
 
-팟, 컨테이너의 로그를 확인하는 명령
+파드, 컨테이너의 로그를 확인하는 명령
 
 ```bash
 kubectl logs [pod-name]
@@ -589,7 +589,7 @@ kubectl config use-context minikube
 
 ### `run`
 
-`docker run` 명령처럼 이미지를 기반으로 팟을 생성시키는 명령
+`docker run` 명령처럼 이미지를 기반으로 파드을 생성시키는 명령
 
 ```bash
 kubecel run [pod-name] --image=[image-path]
