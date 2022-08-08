@@ -32,7 +32,7 @@
 
 ### [Node Selector](https://kubernetes.io/ko/docs/concepts/scheduling-eviction/assign-pod-node/#nodeselector)
 
-사용자가 명시한 레이블을 가진 노드에만 파드을 스케줄링. 없으면 안함.
+사용자가 명시한 레이블을 가진 노드에만 파드를 스케줄링. 없으면 안함.
 
 ```yaml
 apiVersion: v1
