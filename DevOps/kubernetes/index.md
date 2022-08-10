@@ -360,6 +360,10 @@ https://kubernetes.io/ko/docs/concepts/workloads/controllers/
 
 ![Common Set](/images/kubernetes_common_set.png)
 
+## [Statefulset](/DevOps/kubernetes/statefulset.md)
+
+디플로이먼트와 비슷하게 파드 집합의 배포와 규모를 관리하며, 디플로이먼트와 다르게 파드들의 순서 및 고유성을 보장.
+
 ## [Volume](https://kubernetes.io/ko/docs/concepts/storage/volumes/)
 
 데이터를 영속성을 가진 별도의 저장소에 저장하지 않으면 파드이 제거됐을 때 사라짐. 쿠버네티스의 볼륨이 컨테이너의 디렉토리를 외부 저장소와 연결해줌. 그리고 다양한 플러그인 통해 흔히 사용하는 대부분의 스토리지를 별도 설정없이 사용할 수 있음.
@@ -367,6 +371,20 @@ https://kubernetes.io/ko/docs/concepts/workloads/controllers/
 - AWS Elastic Block Storage
 - Azure Disk
 - GCE Persistent Disk
+
+### Storage Class
+
+사용자들이 클라우드 공급자에게 요구하는 스토리지의 종류를 명시하는 쿠버네티스 오브젝트. 스토리지 클래스 별로 디스크 지연시간, 처리량 같은 다양한 서비스 퀄리티를 표현하며, 사용되는 시나리오와 클라우드 공급자의 지원에 따라 선택됨.
+
+Persistent Volumes, Persistent Volumes Claims가 스토리지 클래스를 사용함.
+
+#### Persistent Volumes
+
+영구 볼륨은 사용자가 각 클라우드 제공업체에서 스토리지를 관리하고 프로비저닝하는 방법에 대한 세부 정보를 입력하지 않도록 하는 추상화 계층 역할을 함.
+
+#### Persistent Volumes Claims
+
+영구 볼륨 사용 요청. 파드와 노드에 비유하자면, 영구 볼륨을 "노드", 영구 볼륨 클레임을 "파드"로 여길 수 있음.
 
 ## [ConfigMap](https://kubernetes.io/ko/docs/concepts/configuration/configmap/)
 
