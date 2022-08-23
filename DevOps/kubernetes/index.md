@@ -97,129 +97,15 @@
 
 각각의 파드를 직접 관리하는 대신 워크로드 리소스 사용 가능.
 
-## Pod
+### [Pod](/DevOps/kubernetes/pod.md)
 
-- 가장 작은 배포 단위
-- 전체 클러스터에서 고유한 IP 할당
-- 여러 컨테이너가 하나의 파드에 속할 수 있음
-  - 호스트 디렉토리나 로컬호스트 네트워크를 공유할 수 있음
+하나 이상의 컨테이너를 실행하는 쿠버네티스에서 생성/관리할 수 있는 배포 가능한 가장 작은 컴퓨팅 단위
 
-![Pod 생성 과정](/images/kubernetes_pod_creation_sequence.svg)
-이미지 출처: [Pod 생성 분석 | 쿠버네티스 안내서](https://subicura.com/k8s/guide/pod.html#pod-%E1%84%89%E1%85%A2%E1%86%BC%E1%84%89%E1%85%A5%E1%86%BC-%E1%84%87%E1%85%AE%E1%86%AB%E1%84%89%E1%85%A5%E1%86%A8)
-
-`kubectl run` 명령을 이용해 파드를 생성하기도 하지만, 대부분 YAML 파일로 많이 만듦.
-
-### [Pod 라이프사이클](https://kubernetes.io/ko/docs/concepts/workloads/pods/pod-lifecycle/)
-
-### 컨테이너 상태 모니터링
-
-`컨테이너 생성`과 `서비스 준비`는 서로 다른 상태. 컨테이너를 생성했다해도 워크로드가 모두 준비되서 동작 가능할 때까지는 초기화 시간이 필요함. 쿠버네티스는 이 `서비스 준비` 상태를 체크하는 옵션을 제공.
-
-- 보통 livenessProbe와 readinessProbe를 같이 적용함. 상세한 설정은 애플리케이션 환경에 따라 적절히 조절.
-
-#### livenessProbe
-
-컨테이너가 정상적으로 동작하는지 체크하고 정상적으로 동작하지 않는다면 컨테이너를 재시작하여 문제를 해결.
-
-```yaml
-apiVersion: v1
-kind: Pod
-metadata:
-  name: echo-lp
-  labels:
-    app: echo
-spec:
-  containers:
-    - name: app
-      image: ghcr.io/subicura/echo:v1
-      livenessProbe: # HTTP GET 요청을 보내 생존 여부 체크
-        httpGet:
-          path: /does/not/exist
-          port: 8080
-        initialDelaySeconds: 5
-        timeoutSeconds: 2 # Default 1
-        periodSeconds: 5 # Defaults 10
-        failureThreshold: 1 # Defaults 3
-
-# NAME      READY   STATUS             RESTARTS      AGE
-# echo-lp   0/1     CrashLoopBackOff   4 (24s ago)   69s
-
-# Events:
-#   Type     Reason     Age                From               Message
-#   ----     ------     ----               ----               -------
-#   Normal   Scheduled  96s                default-scheduler  Successfully assigned default/echo-lp to minikube
-#   Warning  BackOff    76s (x2 over 76s)  kubelet            Back-off restarting failed container
-#   Normal   Pulled     56s (x5 over 95s)  kubelet            Container image "ghcr.io/subicura/echo:v1" already present on machine
-#   Normal   Created    56s (x5 over 95s)  kubelet            Created container app
-#   Normal   Started    56s (x5 over 95s)  kubelet            Started container app
-#   Warning  Unhealthy  56s (x4 over 86s)  kubelet            Liveness probe failed: Get "http://172.17.0.3:8080/does/not/exist": dial tcp 172.17.0.3:8080: connect: connection refused
-#   Normal   Killing    56s (x4 over 86s)  kubelet            Container app failed liveness probe, will be restarted
-```
-
-#### readinessProbe
-
-컨테이너 준비 여부 체크 후 준비되지 않으면 파드로 들어오는 요청을 제외. livenessProbe는 재시작하지만 readinessProbe는 요청만 제외시킴.
-
-```yaml
-apiVersion: v1
-kind: Pod
-metadata:
-  name: echo-rp
-  labels:
-    app: echo
-spec:
-  containers:
-    - name: app
-      image: ghcr.io/subicura/echo:v1
-      readinessProbe: # HTTP GET 요청을 보내 생존 여부 체크
-        httpGet:
-          path: /does/not/exist
-          port: 8080
-        initialDelaySeconds: 5
-        timeoutSeconds: 2 # Default 1
-        periodSeconds: 5 # Defaults 10
-        failureThreshold: 1 # Defaults 3
-
-# NAME      READY   STATUS    RESTARTS   AGE
-# echo-rp   0/1     Running   0          8s
-
-# Events:
-#   Type     Reason     Age               From               Message
-#   ----     ------     ----              ----               -------
-#   Normal   Scheduled  27s               default-scheduler  Successfully assigned default/echo-lp to minikube
-#   Normal   Pulled     26s               kubelet            Container image "ghcr.io/subicura/echo:v1" already present on machine
-#   Normal   Created    26s               kubelet            Created container app
-#   Normal   Started    26s               kubelet            Started container app
-#   Warning  Unhealthy  2s (x4 over 17s)  kubelet            Readiness probe failed: Get "http://172.17.0.3:8080/does/not/exist": dial tcp 172.17.0.3:8080: connect: connection refused
-```
-
-### 다중 컨테이너
-
-하나의 파드에 속한 컨테이너는 네트워크를 localhost로 공유하고, 디렉토리 또한 공유할 수 있음.
-
-```yaml
-apiVersion: v1
-kind: Pod
-metadata:
-  name: counter
-  labels:
-    app: counter
-spec:
-  containers:
-    - name: app
-      image: ghcr.io/subicura/counter:latest
-      env:
-        - name: REDIS_HOST
-          value: "localhost"
-    - name: db
-      image: redis
-```
-
-## Workload Resources
+### Workload Resources
 
 사용자를 대신해 파드 집합을 관리하는 리소스. 컨트롤러(지정한 상태와 일치하도록 올바른 수와 유형의 파드이 실행되고 있는지 확인)를 구성.
 
-### ReplicaSet
+#### ReplicaSet
 
 - 여러개의 파드를 관리
   - 신규 파드를 생성하거나, 기존 파드를 제거해 원하는 수(Replicas)를 유지
@@ -253,7 +139,7 @@ spec:
 # replicaset.apps/echo-rs   1         1         1       3m41s   <none>
 ```
 
-### Deployment
+#### Deployment
 
 - 내부적으로 ReplicaSet을 이용해 배포 버전을 관리
 
@@ -328,7 +214,7 @@ kubectl rollout status deployment/nginx-deploy
 kubectl scale deployment nginx-deploy --replicas=6
 ```
 
-#### Deployment Types
+##### Deployment Types
 
 - Recreate
   - A가 완전히 꺼진 다음 B를 올림
@@ -341,7 +227,7 @@ kubectl scale deployment nginx-deploy --replicas=6
 - Blue Green
   - Blue(구버전)과 동일한 규모의 Green(신버전)을 한꺼번에 만들고 로드밸런서 연결만 바꾸는 방식
 
-### 그 외
+#### 그 외
 
 https://kubernetes.io/ko/docs/concepts/workloads/controllers/
 
