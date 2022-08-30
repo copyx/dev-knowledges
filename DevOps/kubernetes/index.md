@@ -107,37 +107,7 @@
 
 #### ReplicaSet
 
-- 여러개의 파드를 관리
-  - 신규 파드를 생성하거나, 기존 파드를 제거해 원하는 수(Replicas)를 유지
-  - 레이블을 이용해 파드를 체크함. 레이블이 겹치지 않게 신경써야함.
-- 다만 실전에서 ReplicaSet이 단독으로 사용되는 일은 거의 없음. ReplicaSet을 관리하는 Deployment를 주로 사용함.
-
-```yaml
-apiVersion: apps/v1
-kind: ReplicaSet
-metadata:
-  name: echo-rs
-spec:
-  replicas: 1 # 몇 개의 파드를 유지할건지
-  selector: # 관리 대상인 파드를 무엇으로 구분할지
-    matchLabels:
-      app: echo
-      tier: app
-  template:
-    metadata:
-      labels:
-        app: echo
-        tier: app
-    spec:
-      containers:
-        - name: echo
-          image: ghcr.io/subicura/echo:v1
-# NAME                READY   STATUS    RESTARTS   AGE     LABELS
-# pod/echo-rs-pw2ll   1/1     Running   0          3m41s   app=echo,tier=app
-#
-# NAME                      DESIRED   CURRENT   READY   AGE     LABELS
-# replicaset.apps/echo-rs   1         1         1       3m41s   <none>
-```
+언제든 주어진 시간에 실행하는 복제 파드들의 안정적인 집합을 관리하는 것이 목적.
 
 #### Deployment
 
