@@ -324,6 +324,10 @@ Docker Hub에 이미지를 올려두면 docker 명령으로 언제든 이미지�
 - `docker push <id>/<image-name>`
 - `docker pull <id>/<image-name>`
 
+Docker Hub 말고도 이미지를 올려두는 저장소는 여러가지가 있음.
+
+그 예로 Google Cloud Platform의 Artifact Registry가 있으며, [gcloud 명령을 이용해 사용자 인증 정보를 구성](https://cloud.google.com/container-registry/docs/advanced-authentication#gcloud-helper)하면 docker push 명령을 이용해 이미지 업로드 가능.
+
 ## 더 보기
 
 - 이미지를 만들기 위한 다양한 쉘 스크립트 & 환경변수 사용

@@ -257,6 +257,17 @@ Persistent Volumes, Persistent Volumes Claims가 스토리지 클래스를 사�
 
 ```yml
 apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: alpine-config
+data:
+  env1: "test"
+  colors.properties: |
+    color.good=purple
+    color.bad=yellow
+    allow.textmode=true
+---
+apiVersion: v1
 kind: Pod
 metadata:
   name: alpine
@@ -266,14 +277,16 @@ spec:
       image: alpine:latest
       command: ["sleep"]
       args: ["100000"]
+      # 파일 추가 방식
       volumeMounts:
         - name: config-vol
           mountPath: /etc/config
+      # 환경변수 방식
       env:
         - name: hello
           valueFrom:
             configMapKeyRef:
-              name: config-map-config
+              name: alpine-config
               key: hello
   volumes:
     - name: config-vol
