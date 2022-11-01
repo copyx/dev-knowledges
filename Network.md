@@ -70,4 +70,4 @@ from 52.38.156.27 | | from xxx.xxx.xxx.xxx
 ### 참고자료
 
 - [NAT(Network Address Translation) - 생활코딩](https://www.opentutorials.org/course/3265/20035)
-- [](https://docs.microsoft.com/ko-kr/azure/rtos/netx-duo/netx-duo-nat/chapter1)
+- [1장 - NAT(Network Address Translation) 소개 | Microsoft Learn](https://docs.microsoft.com/ko-kr/azure/rtos/netx-duo/netx-duo-nat/chapter1)
