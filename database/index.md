@@ -39,7 +39,7 @@
 
 | Link                      | Tags                       |
 | ------------------------- | -------------------------- |
-| [MySQL](MySQL.md)         | `database` `sql` `backend` |
+| [MySQL](mysql/index.md)   | `database` `sql` `backend` |
 | [SQL JOINs](SQL-JOINs.md) | `database` `sql` `backend` |
 
 # 참고자료
