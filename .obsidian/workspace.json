@@ -1,0 +1,162 @@
+{
+  "main": {
+    "id": "77214c36810b2c16",
+    "type": "split",
+    "children": [
+      {
+        "id": "d89d29daa4a3bd4e",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "2229636737a0656e",
+            "type": "leaf",
+            "state": {
+              "type": "empty",
+              "state": {}
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "0672fe0c11e2e1a8",
+    "type": "split",
+    "children": [
+      {
+        "id": "efc8e4435e45e19d",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "2efe25cc1b9842a7",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "203a4c34f86ac12c",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "6e299585e1bcb548",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {}
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "ba00cd9cabbae261",
+    "type": "split",
+    "children": [
+      {
+        "id": "938b457203bb63fe",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "c5f1b2ee84e1ef33",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "00e1c63a0561786a",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "dbeff7bf6c96183a",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true
+              }
+            }
+          },
+          {
+            "id": "5fdc26bd96f2f37e",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {}
+            }
+          },
+          {
+            "id": "f86ef2434d275c2b",
+            "type": "leaf",
+            "state": {
+              "type": "calendar",
+              "state": {}
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false
+    }
+  },
+  "active": "2229636737a0656e",
+  "lastOpenFiles": [
+    "aws/Amazon CloudFront.md",
+    "aws",
+    "golang/Golang.md",
+    "golang",
+    "AWS.md",
+    "blog/nginx-and-certbot.md",
+    "blog",
+    "Axios.md",
+    "서버-개발-환경의-구분과-역할.md",
+    "유용한-도구들.md"
+  ]
+}
