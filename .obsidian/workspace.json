@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "golang/Golang.md",
+                "file": "tools/Vimium.md",
                 "mode": "source",
                 "backlinks": true,
                 "source": false
@@ -86,7 +86,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "golang/Golang.md",
+                "file": "tools/Vimium.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -103,7 +103,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "golang/Golang.md",
+                "file": "tools/Vimium.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -126,7 +126,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "golang/Golang.md"
+                "file": "tools/Vimium.md"
               }
             }
           },
@@ -157,9 +157,11 @@
   },
   "active": "91a354ae9cae53a9",
   "lastOpenFiles": [
+    "golang/Golang.md",
+    "tools/Vimium.md",
+    "tools",
     "aws/Amazon CloudFront.md",
     "aws",
-    "golang/Golang.md",
     "golang",
     "AWS.md",
     "blog/nginx-and-certbot.md",
