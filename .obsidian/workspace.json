@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "tools/Vimium.md",
+                "file": "tools/Curl.md",
                 "mode": "source",
                 "backlinks": true,
                 "source": false
@@ -86,7 +86,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "tools/Vimium.md",
+                "file": "tools/Curl.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -103,7 +103,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "tools/Vimium.md",
+                "file": "tools/Curl.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -126,7 +126,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "tools/Vimium.md"
+                "file": "tools/Curl.md"
               }
             }
           },
@@ -157,8 +157,11 @@
   },
   "active": "91a354ae9cae53a9",
   "lastOpenFiles": [
-    "golang/Golang.md",
+    "tools/Useful Tools.md",
+    "tools/Curl.md",
     "tools/Vimium.md",
+    "Axios.md",
+    "golang/Golang.md",
     "tools",
     "aws/Amazon CloudFront.md",
     "aws",
@@ -166,8 +169,6 @@
     "AWS.md",
     "blog/nginx-and-certbot.md",
     "blog",
-    "Axios.md",
-    "서버-개발-환경의-구분과-역할.md",
-    "유용한-도구들.md"
+    "서버-개발-환경의-구분과-역할.md"
   ]
 }

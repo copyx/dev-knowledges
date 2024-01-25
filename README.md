@@ -27,7 +27,7 @@
 | [The Personal Experience and Opinion](The-Personal-Experience-and-Opinion.md) | `think` `stance`                        |
 | [Jest](Jest.md)                                                               | `test_framework` `javascript`           |
 | [Visual Studio Code 자꾸 까먹는 유용한 단축키](VSC-shortcuts.md)              | `tool` `tip`                            |
-| [유용한 도구들](유용한-도구들.md)                                             | `tool`                                  |
+| [유용한 도구들](Useful%20Tools.md)                                             | `tool`                                  |
 | [Node Package Version 표시 형식](Node-Package-Version-표시-형식.md)           | `node` `package` `yarn` `npm`           |
 | [TypeScript](TypeScript.md)                                                   | `javascript` `typescript` `language`    |
 | [Axios](Axios.md)                                                             | `javascript` `http` `library`           |
