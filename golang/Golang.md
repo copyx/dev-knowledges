@@ -784,6 +784,8 @@ The `default` case in a `select` is run if no other case is ready.
 
 ## Modules, packages, and versions
 
+https://go.dev/ref/mod#
+
 A module = a collection of packages.
 Modules may be downloaded directly from version control repositories or module proxy servers.
 A module is identified by a module path which is declared in a `go.mod` file. The file has information about the module's dependencies.
