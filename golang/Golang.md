@@ -780,4 +780,19 @@ func selectExample(a, b chan int) {
 }
 ```
 
-The `default` case in a `select` is run if no other case is ready.ij
+The `default` case in a `select` is run if no other case is ready.
+
+## Modules, packages, and versions
+
+A module = a collection of packages.
+Modules may be downloaded directly from version control repositories or module proxy servers.
+A module is identified by a module path which is declared in a `go.mod` file. The file has information about the module's dependencies.
+The module root directory = the directory that contains the `go.mod` file.
+The main module = the module containing the directory where the go command is invoked.
+A module directive = the main module's path.
+A go.mod file must contain exactly one.
+
+A package = a collection of source files in the same directory.
+They are compiled together.
+A package path = the module path + subdirectory containing the package
+e.g.) "html" package of "golang.org/x/net" module = "golang.org/x/net/html"
